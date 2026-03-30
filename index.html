@@ -90,33 +90,77 @@ body {
 </div>
 
 <script>
-// ==================== FULL 20 NOVICE CARDS ====================
+// ==================== ALL 60 CARDS (20 per level) ====================
 const CARDS = {
   novice: [
     {icon:"🏍️", q:"What is the clutch and when do you use it?", a:"The <strong>clutch</strong> is the lever on the left handlebar. It disconnects the engine from the rear wheel. Use it to start moving, shift gears, and stop without stalling."},
-    {icon:"⚙️", q:"How do you shift gears on a dirt bike?", a:"Pull the <strong>clutch lever</strong>, click the gear shifter with your left foot, then release the clutch smoothly."},
-    {icon:"🧢", q:"What are the 5 essential pieces of safety gear?", a:"<strong>Helmet</strong> (DOT rated), <strong>goggles</strong>, <strong>chest protector</strong>, <strong>gloves</strong>, and <strong>boots</strong>."},
-    {icon:"🦵", q:"What is the 'attack position' in motocross?", a:"Stand on the pegs, knees bent and gripping the bike, elbows up, eyes scanning ahead."},
+    {icon:"⚙️", q:"How do you shift gears on a dirt bike?", a:"Pull the <strong>clutch lever</strong>, click the gear shifter up or down with your left foot, then release the clutch smoothly."},
+    {icon:"🧢", q:"What are the 5 essential pieces of safety gear?", a:"<strong>Helmet</strong> (DOT/SNELL rated), <strong>goggles</strong>, <strong>chest protector</strong>, <strong>gloves</strong>, and <strong>boots</strong>."},
+    {icon:"🦵", q:"What is the 'attack position' in motocross?", a:"Stand on the pegs, knees bent and gripping the bike, elbows up, back slightly forward, eyes scanning ahead."},
     {icon:"🌀", q:"Which foot goes forward in a corner?", a:"Your <strong>outside foot</strong> goes forward on the peg."},
-    {icon:"🏁", q:"What is a 'berm' and how do you ride it?", a:"A <strong>berm</strong> is a banked corner of built-up dirt. Ride into it and let it redirect your bike."},
+    {icon:"🏁", q:"What is a 'berm' and how do you ride it?", a:"A <strong>berm</strong> is a banked corner of built-up dirt. Ride into it, let it redirect your bike, then accelerate hard as you exit."},
     {icon:"🛑", q:"What are the two brakes and where are they located?", a:"Front brake = right handlebar lever. Rear brake = right foot pedal."},
-    {icon:"🔧", q:"How often should you check tire pressure?", a:"Check <strong>before every ride</strong>. Motocross tires typically run <strong>12–14 PSI</strong>."},
-    {icon:"👀", q:"Where should your eyes be when riding?", a:"Always <strong>3–5 seconds ahead</strong> of your current position."},
-    {icon:"⛽", q:"What does it mean when your 2-stroke four-strokes?", a:"The engine is running too rich (too much fuel). It sounds chuggy instead of crisp."},
-    {icon:"🤲", q:"What is engine braking?", a:"When you close the throttle, the engine compression slows the bike down."},
+    {icon:"🔧", q:"How often should you check tire pressure?", a:"Check before every ride. Motocross tires typically run 12–14 PSI."},
+    {icon:"👀", q:"Where should your eyes be when riding?", a:"Always 3–5 seconds ahead of your current position."},
+    {icon:"⛽", q:"What does it mean when your 2-stroke four-strokes?", a:"Four-stroking means the engine is running too rich. It sounds chuggy instead of crisp."},
+    {icon:"🤲", q:"What is engine braking?", a:"When you close the throttle, the engine compression slows the bike."},
     {icon:"🔂", q:"What does 'looking through the corner' mean?", a:"Turn your head and eyes toward the exit of the corner as early as possible."},
     {icon:"⚠️", q:"What do you do if your throttle sticks open?", a:"Pull the clutch immediately, then hit the kill switch."},
     {icon:"🛞", q:"Why is chain tension important?", a:"A loose chain can derail or snap and lock the rear wheel."},
     {icon:"💨", q:"How should a beginner approach a whoop section?", a:"Slow down, stay seated, and absorb each whoop with bent knees."},
     {icon:"🌡️", q:"Why warm up your bike before riding hard?", a:"Warm it for 2–3 minutes so oil circulates properly."},
-    {icon:"🏔️", q:"How should you position your body going downhill?", a:"Shift weight back and low, cover both brakes."},
-    {icon:"🤸", q:"How do you use your legs on the bike?", a:"Your legs are the main shock absorbers. Keep knees bent and gripping."},
+    {icon:"🏔️", q:"How should you position your body when going downhill?", a:"Shift weight back and low, cover both brakes."},
+    {icon:"🤸", q:"How do you use your legs on the bike as a beginner?", a:"Your legs are the main shock absorbers. Keep knees bent and gripping."},
     {icon:"📏", q:"What is the safe following distance?", a:"At least 3–5 bike lengths."},
     {icon:"🔴", q:"When should you hit the kill switch?", a:"Any time you need to stop the bike instantly."}
+  ],
+  intermediate: [
+    {icon:"🎯", q:"Difference between inside and outside line in a corner?", a:"Inside is shortest but less traction. Outside uses the berm for better grip and speed."},
+    {icon:"🔄", q:"What is pre-loading a jump?", a:"Compressing the suspension just before the lip to launch better and control body position."},
+    {icon:"📐", q:"How do you correct a nose-high situation in the air?", a:"Apply a small burst of rear brake to bring the nose down."},
+    {icon:"🌊", q:"What is a rhythm section?", a:"Series of closely spaced jumps. Goal is to find the fastest smooth combination."},
+    {icon:"⚡", q:"What is throttle control in corners?", a:"Smoothly managing power — slightly off at entry, neutral at apex, accelerate on exit."},
+    {icon:"🚦", q:"What is the holeshot?", a:"Reaching the first corner in first place. Requires good gate pick and explosive start."},
+    {icon:"🏋️", q:"Why is grip strength important?", a:"Prevents arm pump. Train with dead hangs and farmer carries."},
+    {icon:"🛞", q:"When to replace air filter?", a:"After every ride if it's dirty, oily, or clogged."},
+    {icon:"💧", q:"How much should you drink on race day?", a:"16–20 oz 2 hours before, then sip consistently. Add electrolytes in heat."},
+    {icon:"🧠", q:"What does 'managing a gap' mean?", a:"Riding at 95% effort once you have a lead to reduce crash risk."},
+    {icon:"🌪️", q:"How do you ride a rut correctly?", a:"Ride deep into the rut, let it guide the front wheel, and drive hard out."},
+    {icon:"📊", q:"How do you gate-pick properly?", a:"Choose the gate that gives the straightest line to the first corner apex."},
+    {icon:"🔁", q:"How do you approach a double for the first time?", a:"Walk it, visualize, approach at correct speed, look at landing."},
+    {icon:"🏃", q:"Best off-bike cardio for motocross?", a:"Cycling, trail running, swimming, and HIIT."},
+    {icon:"🌡️", q:"Why check coolant on a 4-stroke?", a:"To prevent overheating and engine seizure."},
+    {icon:"📍", q:"What is a block pass?", a:"Entering a corner in front to force opponent wide. Most effective with late braking."},
+    {icon:"🎛️", q:"What does tire knob pattern affect?", a:"Traction on different surfaces. Tall knobs for soft/mud, shorter for hard-pack."},
+    {icon:"🧘", q:"How to handle crashing mentally?", a:"Assess injury quickly, get up, and focus on the next corner. Don't replay it."},
+    {icon:"⏱️", q:"What is a moto format?", a:"Timed race, usually 20–30 minutes + 2 laps. Overall result based on multiple motos."},
+    {icon:"🔦", q:"What is track walk and why important?", a:"Walking the track before riding to study lines, jumps, and hazards."}
+  ],
+  expert: [
+    {icon:"🏆", q:"What is blocking a pass and when is it legal?", a:"Positioning your bike to make passing harder. Legal before corner entry."},
+    {icon:"🎛️", q:"What is sag and how does it affect handling?", a:"How much suspension compresses under rider weight. Target 100–105mm race sag."},
+    {icon:"🔬", q:"What does increasing compression damping do?", a:"Makes suspension stiffer on big hits for better control."},
+    {icon:"💨", q:"How do you execute a scrub on a jump?", a:"Lean and whip the bike sideways across the jump face to stay low and maintain speed."},
+    {icon:"🧩", q:"How do you set up a pass in a corner?", a:"Out-brake opponent, take inside line, be alongside before the apex."},
+    {icon:"📊", q:"What is a structured training block?", a:"Periodized program with build, peak, and recovery phases."},
+    {icon:"🏔️", q:"What is VO2 max and why important?", a:"Maximum oxygen consumption. Higher = faster recovery during motos."},
+    {icon:"🎯", q:"What is visualization before a race?", a:"Mentally rehearsing a perfect lap. Used by top riders like Carmichael and Dungey."},
+    {icon:"🔩", q:"How do you check chain tension?", a:"With rider on bike, about 1.5 inches of play at the tightest point."},
+    {icon:"📡", q:"How do you ride in wet/muddy conditions?", a:"Lower tire pressure, smoother lines, gentle throttle."},
+    {icon:"🔭", q:"What is rebound damping?", a:"Controls how fast suspension extends after compression."},
+    {icon:"🧬", q:"What is lactate threshold training?", a:"Training near the point where lactic acid builds up to raise sustainable race pace."},
+    {icon:"🏎️", q:"How do you manage tire wear during a moto?", a:"Adjust lines as grip drops, avoid aggressive wheelspin."},
+    {icon:"🌐", q:"What is the points structure at Loretta Lynn's?", a:"Points from 3 motos determine who advances and earns a national number."},
+    {icon:"📈", q:"What is periodization in training?", a:"Dividing the year into base, build, peak, and recovery phases."},
+    {icon:"🤝", q:"What is linkage and why important?", a:"Connects shock to swingarm. Worn bearings make rear suspension vague."},
+    {icon:"🧠", q:"How do elite riders manage race anxiety?", a:"Reframe it as readiness and use controlled breathing routines."},
+    {icon:"🌿", q:"Nutrition timing on race day?", a:"Carb-rich meal 3 hours before, small snack 30–45 min before."},
+    {icon:"⚖️", q:"How does fork height in triple clamps affect handling?", a:"Raising forks quickens steering but reduces stability."},
+    {icon:"🔑", q:"What is controlled aggression?", a:"Riding at maximum commitment without exceeding your limits."}
   ]
 };
 
-let state = { totalXp: 0, noviceCompleted: 0 };
+let state = { totalXp: 0 };
 
 function loadState() {
   const saved = localStorage.getItem('forgeMX');
@@ -132,10 +176,12 @@ function saveState() {
 let currentDeck = [];
 let currentIdx = 0;
 let flipped = false;
+let currentLevel = '';
 
 function startLevel(level) {
   loadState();
-  currentDeck = CARDS.novice;
+  currentLevel = level;
+  currentDeck = CARDS[level] || CARDS.novice;
   currentIdx = 0;
   flipped = false;
 
@@ -148,9 +194,7 @@ function startLevel(level) {
 
 function renderCard() {
   if (currentIdx >= currentDeck.length) {
-    state.noviceCompleted = (state.noviceCompleted || 0) + 1;
-    saveState();
-    alert("🎉 Novice Level Complete!\n\nYou've earned XP for this session.");
+    alert(`🎉 ${currentLevel.toUpperCase()} Level Complete!\n\nYou've earned XP for this session.`);
     goHome();
     return;
   }
@@ -191,7 +235,7 @@ function goHome() {
 function resetProgress() {
   if (confirm("Reset all XP and progress? This cannot be undone.")) {
     localStorage.removeItem('forgeMX');
-    state = { totalXp: 0, noviceCompleted: 0 };
+    state = { totalXp: 0 };
     document.getElementById('totalXp').textContent = 0;
     alert("Progress has been reset.");
   }
@@ -203,7 +247,7 @@ document.getElementById('gotBtn').addEventListener('click', () => vote(true));
 document.getElementById('missedBtn').addEventListener('click', () => vote(false));
 
 loadState();
-console.log("✅ Forge MX Training - Gamified Version Loaded");
+console.log("✅ Forge MX Training - Full 60 Cards + Gamification Loaded");
 </script>
 </body>
 </html>
