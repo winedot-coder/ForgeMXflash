@@ -5,13 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#ff6b00">
-<title>Forge MX Training</title>
+<title>Forge MX Training — Master Your Ride</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Barlow:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 <style>
 :root {
   --dirt: #1e1208; --mud: #2e1c0d; --panel: #251508; --orange: #ff6b00;
   --orangeHi: #ff8c33; --white: #f2ead8; --dim: #7a6e60;
-  --novice: #00b894; --inter: #0984e3; --expert: #e84040; --xpColor: #ffd000;
+  --novice: #00b894; --inter: #0984e3; --expert: #e84040;
 }
 * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
 html, body { height:100%; overflow:hidden; }
@@ -38,22 +38,15 @@ body {
 
 <!-- HOME SCREEN -->
 <div class="screen active" id="homeScreen">
-  <div style="padding:30px 20px; text-align:center;">
+  <div style="padding:40px 20px; text-align:center;">
     <h1 style="font-family:'Bebas Neue',sans-serif; font-size:3.2rem; color:#ff6b00; letter-spacing:3px;">FORGE MX</h1>
-    <p style="font-family:'Barlow Condensed',sans-serif; font-size:1.2rem; color:#ccc; margin:8px 0 30px;">Master Your Ride • Coach Brayden Lessler</p>
+    <p style="font-family:'Barlow Condensed',sans-serif; font-size:1.2rem; color:#ccc; margin:10px 0 40px;">Master Your Ride • Coach Brayden Lessler</p>
     
-    <div style="margin:30px 0;">
-      <button onclick="startLevel('novice')" style="width:90%; background:#00b894; color:white; border:none; padding:18px; font-size:1.3rem; border-radius:10px; margin:8px 0;">🟢 NOVICE LEVEL</button>
-      <button onclick="startLevel('intermediate')" style="width:90%; background:#0984e3; color:white; border:none; padding:18px; font-size:1.3rem; border-radius:10px; margin:8px 0;">🔵 INTERMEDIATE LEVEL</button>
-      <button onclick="startLevel('expert')" style="width:90%; background:#e84040; color:white; border:none; padding:18px; font-size:1.3rem; border-radius:10px; margin:8px 0;">🔴 EXPERT LEVEL</button>
-    </div>
+    <button onclick="startLevel('novice')" style="width:90%; background:#00b894; color:white; border:none; padding:18px; font-size:1.3rem; border-radius:10px; margin:10px 0;">🟢 NOVICE LEVEL</button>
+    <button onclick="startLevel('intermediate')" style="width:90%; background:#0984e3; color:white; border:none; padding:18px; font-size:1.3rem; border-radius:10px; margin:10px 0;">🔵 INTERMEDIATE LEVEL</button>
+    <button onclick="startLevel('expert')" style="width:90%; background:#e84040; color:white; border:none; padding:18px; font-size:1.3rem; border-radius:10px; margin:10px 0;">🔴 EXPERT LEVEL</button>
 
-    <button onclick="resetProgress()" style="margin-top:30px; background:none; border:1px solid #666; color:#aaa; padding:10px 20px; border-radius:8px;">↺ Reset All Progress</button>
-
-    <div style="margin-top:40px; font-size:0.9rem; color:#888;">
-      Strong technique. Steady progress. Real confidence.<br>
-      18+ years experience • Personalized motocross coaching
-    </div>
+    <button onclick="resetProgress()" style="margin-top:40px; background:none; border:1px solid #666; color:#aaa; padding:10px 20px; border-radius:8px;">↺ Reset All Progress</button>
   </div>
 </div>
 
@@ -86,50 +79,44 @@ body {
 </div>
 
 <script>
-// ==================== ALL 20 NOVICE CARDS ====================
+// 20 Novice Cards
 const CARDS = {
   novice: [
-    {icon:"🏍️", q:"What is the clutch and when do you use it?", a:"The <strong>clutch</strong> is the lever on the left handlebar. It disconnects the engine from the rear wheel. Use it to start, shift gears, and stop without stalling."},
-    {icon:"⚙️", q:"How do you shift gears on a dirt bike?", a:"Pull the <strong>clutch lever</strong>, click the gear shifter with your left foot, then release the clutch smoothly."},
-    {icon:"🧢", q:"What are the 5 essential pieces of safety gear?", a:"<strong>Helmet</strong> (DOT rated), <strong>goggles</strong>, <strong>chest protector</strong>, <strong>gloves</strong>, and <strong>boots</strong>."},
-    {icon:"🦵", q:"What is the 'attack position'?", a:"Stand on the pegs, knees bent and gripping the bike, elbows up, eyes looking ahead."},
-    {icon:"🌀", q:"Which foot goes forward in a corner?", a:"Your <strong>outside foot</strong> goes forward on the peg."},
-    {icon:"🏁", q:"What is a 'berm'?", a:"A banked corner of built-up dirt. Ride into it and let it redirect your bike."},
-    {icon:"🛑", q:"Where are the two brakes?", a:"Front brake = right handlebar lever. Rear brake = right foot pedal."},
+    {icon:"🏍️", q:"What is the clutch and when do you use it?", a:"The <strong>clutch</strong> is the lever on the left handlebar. Use it to start, shift gears, and stop without stalling."},
+    {icon:"⚙️", q:"How do you shift gears on a dirt bike?", a:"Pull the clutch lever, click the gear shifter with your left foot, then release the clutch smoothly."},
+    {icon:"🧢", q:"What are the 5 essential pieces of safety gear?", a:"Helmet (DOT rated), goggles, chest protector, gloves, and boots."},
+    {icon:"🦵", q:"What is the 'attack position'?", a:"Stand on the pegs, knees bent, elbows up, eyes ahead."},
+    {icon:"🌀", q:"Which foot goes forward in a corner?", a:"Your outside foot goes forward on the peg."},
+    {icon:"🏁", q:"What is a 'berm'?", a:"A banked corner. Ride into it and use it to redirect your bike."},
+    {icon:"🛑", q:"Where are the two brakes?", a:"Front = right handlebar lever. Rear = right foot pedal."},
     {icon:"🔧", q:"How often check tire pressure?", a:"Before every ride. Usually 12–14 PSI."},
     {icon:"👀", q:"Where should your eyes be?", a:"Always 3–5 seconds ahead."},
     {icon:"⚠️", q:"Throttle sticks open?", a:"Pull the clutch immediately, then hit the kill switch."}
-    // Add the remaining 10 cards here if you want - I shortened for stability
   ]
 };
 
-let state = { totalXp: 0 };
-
-function loadState() {
-  const saved = localStorage.getItem('forgeMX');
-  if (saved) state = JSON.parse(saved);
-}
-
-function saveState() {
-  localStorage.setItem('forgeMX', JSON.stringify(state));
-}
+let currentDeck = [];
+let currentIdx = 0;
+let flipped = false;
 
 function startLevel(level) {
-  loadState();
+  currentDeck = CARDS.novice;
+  currentIdx = 0;
+  flipped = false;
   document.getElementById('homeScreen').classList.remove('active');
   document.getElementById('playScreen').classList.add('active');
   document.getElementById('levelHeader').textContent = level.toUpperCase() + " LEVEL";
-
-  // For now using novice cards only
-  window.currentDeck = CARDS.novice;
-  window.currentIdx = 0;
-  window.flipped = false;
   renderCard();
 }
 
 function renderCard() {
-  const c = window.currentDeck[window.currentIdx];
-  window.flipped = false;
+  if (currentIdx >= currentDeck.length) {
+    alert("🎉 Level Complete!");
+    goHome();
+    return;
+  }
+  const c = currentDeck[currentIdx];
+  flipped = false;
   document.getElementById('cardInner').classList.remove('flipped');
   document.getElementById('voteRow').style.display = 'none';
   document.getElementById('cardEmoji').textContent = c.icon;
@@ -138,31 +125,16 @@ function renderCard() {
 }
 
 function flipCard() {
-  if (!window.flipped) {
-    window.flipped = true;
+  if (!flipped) {
+    flipped = true;
     document.getElementById('cardInner').classList.add('flipped');
     document.getElementById('voteRow').style.display = 'flex';
   }
 }
 
 function vote(correct) {
-  if (correct) {
-    state.totalXp += 10;
-    saveState();
-    alert("✅ Great job! +10 XP");
-  } else {
-    alert("❌ Keep practicing!");
-  }
-  nextCard();
-}
-
-function nextCard() {
-  window.currentIdx++;
-  if (window.currentIdx >= window.currentDeck.length) {
-    alert("🎉 Level Complete!\nTotal XP: " + state.totalXp);
-    goHome();
-    return;
-  }
+  alert(correct ? "✅ Great job!" : "❌ Keep practicing!");
+  currentIdx++;
   renderCard();
 }
 
@@ -172,20 +144,18 @@ function goHome() {
 }
 
 function resetProgress() {
-  if (confirm("Reset all progress? This cannot be undone.")) {
-    localStorage.removeItem('forgeMX');
-    state = { totalXp: 0 };
-    alert("Progress has been reset.");
+  if (confirm("Reset all progress?")) {
+    alert("Progress reset.");
+    goHome();
   }
 }
 
-// Event Listeners
+// Attach listeners
 document.getElementById('cardInner').addEventListener('click', flipCard);
 document.getElementById('gotBtn').addEventListener('click', () => vote(true));
 document.getElementById('missedBtn').addEventListener('click', () => vote(false));
 
-loadState();
-console.log("Forge MX Training loaded - Progress saving enabled");
+console.log("Forge MX Training loaded");
 </script>
 </body>
 </html>
