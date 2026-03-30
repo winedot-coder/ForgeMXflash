@@ -24,83 +24,87 @@ body {
 .screen { display:none; flex-direction:column; height:100%; overflow:hidden; }
 .screen.active { display:flex; }
 
-/* Basic card styles */
-.card-stage { flex:1; display:flex; align-items:center; justify-content:center; padding:20px; perspective:1200px; }
+/* Card Styles */
+.card-stage { flex:1; display:flex; align-items:center; justify-content:center; padding:20px; perspective:1400px; }
 .card-inner {
-  width:100%; max-width:420px; transform-style:preserve-3d; transition:transform 0.6s cubic-bezier(0.4,0.2,0.2,1); cursor:pointer;
+  width:100%; max-width:420px; transform-style:preserve-3d; transition: transform 0.6s cubic-bezier(0.4,0.2,0.2,1); cursor:pointer;
 }
 .card-inner.flipped { transform:rotateY(180deg); }
 .card-face {
-  width:100%; backface-visibility:hidden; border-radius:12px; overflow:hidden; box-shadow:0 10px 30px rgba(0,0,0,0.6);
+  width:100%; backface-visibility:hidden; border-radius:12px; overflow:hidden; box-shadow:0 12px 40px rgba(0,0,0,0.6);
 }
 .card-back-face { position:absolute; top:0; left:0; transform:rotateY(180deg); }
+.card-front-face { background: var(--mud); }
 </style>
 </head>
 <body>
 
 <!-- HOME SCREEN -->
 <div class="screen active" id="homeScreen">
-  <div style="padding:40px 20px; text-align:center;">
-    <h1 style="font-family:'Bebas Neue',sans-serif; font-size:2.8rem; color:#ff6b00;">FORGE MX</h1>
-    <p style="margin:20px 0; color:#ccc;">Master Your Ride</p>
-    <button onclick="startLevel('novice')" style="background:#ff6b00; color:white; border:none; padding:15px 30px; font-size:1.2rem; border-radius:8px; margin:10px;">Start Novice Level</button>
+  <div style="padding:40px 20px 20px; text-align:center;">
+    <h1 style="font-family:'Bebas Neue',sans-serif; font-size:3rem; color:#ff6b00; letter-spacing:2px;">FORGE MX</h1>
+    <p style="font-family:'Barlow Condensed',sans-serif; font-size:1.1rem; color:#ccc; margin:10px 0 40px;">Master Your Ride</p>
+    
+    <button onclick="startLevel('novice')" style="width:90%; background:#ff6b00; color:white; border:none; padding:18px; font-size:1.3rem; border-radius:10px; margin:10px 0;">NOVICE LEVEL</button>
+    <button onclick="startLevel('intermediate')" style="width:90%; background:#0984e3; color:white; border:none; padding:18px; font-size:1.3rem; border-radius:10px; margin:10px 0;">INTERMEDIATE LEVEL</button>
+    <button onclick="startLevel('expert')" style="width:90%; background:#e84040; color:white; border:none; padding:18px; font-size:1.3rem; border-radius:10px; margin:10px 0;">EXPERT LEVEL</button>
   </div>
 </div>
 
 <!-- PLAY SCREEN -->
 <div class="screen" id="playScreen">
-  <div style="padding:15px; background:#251508; text-align:center; font-size:1.1rem;" id="levelHeader">NOVICE LEVEL</div>
+  <div style="padding:12px 16px; background:var(--panel); text-align:center; font-size:1.2rem; font-weight:bold;" id="levelHeader">NOVICE</div>
   
   <div class="card-stage">
     <div class="card-inner" id="cardInner">
       <!-- Front -->
-      <div class="card-face" style="background:var(--mud); padding:30px; min-height:320px;">
-        <div id="cardEmoji" style="font-size:60px; margin-bottom:20px;"></div>
-        <div id="cardQ" style="font-size:1.4rem; line-height:1.3; font-family:'Bebas Neue',sans-serif;"></div>
-        <div style="margin-top:30px; font-size:0.9rem; color:#aaa;">Tap to reveal answer</div>
+      <div class="card-face card-front-face" style="padding:30px; min-height:300px; text-align:center;">
+        <div id="cardEmoji" style="font-size:70px; margin-bottom:20px;"></div>
+        <div id="cardQ" style="font-size:1.45rem; line-height:1.25; font-family:'Bebas Neue',sans-serif;"></div>
+        <div style="margin-top:40px; font-size:0.95rem; color:#aaa;">Tap card to reveal answer</div>
       </div>
       <!-- Back -->
-      <div class="card-face card-back-face" style="background:#111; padding:25px; min-height:320px;">
-        <div style="color:#ff6b00; font-weight:bold; margin-bottom:10px;">ANSWER</div>
-        <div id="cardAns" style="line-height:1.6; font-size:1.05rem;"></div>
+      <div class="card-face card-back-face" style="background:#111; padding:25px; min-height:300px;">
+        <div style="color:#ff6b00; font-size:1.1rem; margin-bottom:12px;">ANSWER</div>
+        <div id="cardAns" style="line-height:1.65; font-size:1.1rem;"></div>
       </div>
     </div>
   </div>
 
-  <div id="voteRow" style="display:none; padding:15px; gap:12px; flex-direction:row;">
-    <button type="button" id="missedBtn" style="flex:1; padding:16px; background:#555; color:white; border:none; border-radius:8px; font-size:1.1rem;">❌ Missed It</button>
-    <button type="button" id="gotBtn" style="flex:1; padding:16px; background:#00b894; color:white; border:none; border-radius:8px; font-size:1.1rem;">✅ Got It!</button>
+  <div id="voteRow" style="display:none; padding:15px; gap:12px;">
+    <button type="button" id="missedBtn" style="flex:1; padding:16px; background:#555; color:white; border:none; border-radius:8px; font-size:1.15rem;">❌ Missed It</button>
+    <button type="button" id="gotBtn" style="flex:1; padding:16px; background:#00b894; color:white; border:none; border-radius:8px; font-size:1.15rem;">✅ Got It!</button>
   </div>
 
   <div style="padding:15px; text-align:center;">
-    <button type="button" onclick="goHome()" style="background:#333; color:#ccc; border:none; padding:10px 20px; border-radius:6px;">← Back to Garage</button>
+    <button type="button" onclick="goHome()" style="background:#333; color:#ccc; border:none; padding:12px 24px; border-radius:8px;">← Back to Garage</button>
   </div>
 </div>
 
 <script>
-// ==================== CARD DATA - All 20 Novice Cards ====================
+// ==================== ALL 20 NOVICE CARDS ====================
 const CARDS = {
   novice: [
-    {icon:"🏍️", q:"What is the clutch and when do you use it?", a:"The clutch is the lever on the left handlebar. It disconnects the engine from the rear wheel. Use it to start moving, shift gears, and stop without stalling."},
-    {icon:"⚙️", q:"How do you shift gears on a dirt bike?", a:"Pull the clutch lever, click the gear shifter with your left foot, then release the clutch smoothly."},
-    {icon:"🧢", q:"What are the 5 essential pieces of safety gear?", a:"Helmet (DOT rated), goggles, chest protector, gloves, and boots."},
-    {icon:"🦵", q:"What is the 'attack position' in motocross?", a:"Stand on the pegs, knees bent and gripping the bike, elbows up, eyes looking ahead."},
-    {icon:"🌀", q:"Which foot goes forward in a corner?", a:"Your outside foot goes forward on the peg."},
-    {icon:"🏁", q:"What is a 'berm' and how do you ride it?", a:"A berm is a banked corner. Ride into it and let it redirect your bike, then accelerate out."},
-    {icon:"🛑", q:"What are the two brakes and where are they located?", a:"Front brake = right handlebar lever. Rear brake = right foot pedal."},
-    {icon:"🔧", q:"How often should you check tire pressure?", a:"Before every ride. Motocross tires usually run 12–14 PSI."},
-    {icon:"👀", q:"Where should your eyes be when riding?", a:"Always 3–5 seconds ahead of your current position."},
-    {icon:"⛽", q:"What does it mean when your 2-stroke four-strokes?", a:"The engine is running too rich (too much fuel). It sounds chuggy instead of crisp."},
-    {icon:"🤲", q:"What is engine braking?", a:"When you close the throttle, the engine compression slows the bike down."},
-    {icon:"🔂", q:"What does 'looking through the corner' mean?", a:"Turn your head and eyes toward the exit of the corner as early as possible."},
-    {icon:"⚠️", q:"What do you do if your throttle sticks open?", a:"Pull the clutch immediately, then hit the kill switch."},
+    {icon:"🏍️", q:"What is the clutch and when do you use it?", a:"The <strong>clutch</strong> is the lever on the left handlebar. It disconnects the engine from the rear wheel. Use it to start moving, shift gears, and stop without stalling."},
+    {icon:"⚙️", q:"How do you shift gears on a dirt bike?", a:"Pull the <strong>clutch lever</strong>, click the gear shifter up or down with your left foot, then release the clutch smoothly."},
+    {icon:"🧢", q:"What are the 5 essential pieces of safety gear?", a:"<strong>Helmet</strong> (DOT rated), <strong>goggles</strong>, <strong>chest protector</strong>, <strong>gloves</strong>, and <strong>boots</strong>."},
+    {icon:"🦵", q:"What is the 'attack position' in motocross?", a:"Stand on the pegs, knees bent and gripping the bike, elbows up, back slightly forward, eyes scanning ahead."},
+    {icon:"🌀", q:"Which foot goes forward in a corner?", a:"Your <strong>outside foot</strong> goes forward on the peg."},
+    {icon:"🏁", q:"What is a 'berm' and how do you ride it?", a:"A <strong>berm</strong> is a banked corner of built-up dirt. Ride into it, let it redirect your bike, then accelerate hard as you exit."},
+    {icon:"🛑", q:"What are the two brakes and where are they located?", a:"Front brake = right handlebar lever. Rear brake = right foot pedal. Use both together for best stopping power."},
+    {icon:"🔧", q:"How often should you check tire pressure?", a:"Check <strong>before every ride</strong>. Motocross tires typically run <strong>12–14 PSI</strong>."},
+    {icon:"👀", q:"Where should your eyes be when riding?", a:"Always <strong>3–5 seconds ahead</strong> of your current position."},
+    {icon:"⛽", q:"What does it mean when your 2-stroke four-strokes?", a:"<strong>Four-stroking</strong> means the engine is running too rich. It sounds like a soft chugging instead of crisp."},
+    {icon:"🤲", q:"What is engine braking and how does it help you?", a:"<strong>Engine braking</strong> happens when you close the throttle — the engine compression slows the bike."},
+    {icon:"🔂", q:"What does 'looking through the corner' mean?", a:"It means turning your head and eyes toward the <strong>exit</strong> of the corner as early as possible."},
+    {icon:"⚠️", q:"What do you do if your throttle sticks open?", a:"Pull the <strong>clutch lever immediately</strong>, then hit the kill switch."},
     {icon:"🛞", q:"Why is chain tension important?", a:"A loose chain can derail or snap and lock the rear wheel."},
-    {icon:"💨", q:"How should a beginner approach a whoop section?", a:"Slow down, stay seated, and absorb the bumps with your knees."},
-    {icon:"🌡️", q:"Why warm up your bike before riding hard?", a:"Cold oil and tight parts can cause damage. Warm it for 2–3 minutes."},
-    {icon:"🏔️", q:"How do you position your body going downhill?", a:"Shift weight back and low, arms slightly bent, cover both brakes."},
-    {icon:"🤸", q:"How do you use your legs on the bike?", a:"Your legs are the main shock absorbers. Keep knees bent and gripping."},
-    {icon:"📏", q:"What is the safe following distance?", a:"At least 3–5 bike lengths, more at speed."},
-    {icon:"🔴", q:"When should you hit the kill switch?", a:"Any time you need to stop the bike instantly — crash, stuck throttle, losing control."}
+    {icon:"💨", q:"How should a beginner approach a whoop section?", a:"Slow down, stay seated, and absorb each whoop with bent knees."},
+    {icon:"🌡️", q:"Why warm up your bike before riding hard?", a:"Cold engines have thick oil. Warm it for 2–3 minutes before riding hard."},
+    {icon:"🏔️", q:"How should you position your body when going downhill?", a:"Shift your weight <strong>back and low</strong>, cover both brakes."},
+    {icon:"🤸", q:"How do you use your legs on the bike as a beginner?", a:"Your legs are your primary shock absorbers. Keep knees bent and gripping the bike."},
+    {icon:"📏", q:"What is the safe following distance?", a:"At least <strong>3–5 bike lengths</strong>."},
+    {icon:"🔴", q:"When should you hit the kill switch?", a:"Any time you need to stop the bike instantly — crash, stuck throttle, or losing control."}
   ]
 };
 
@@ -111,17 +115,18 @@ let flipped = false;
 
 function startLevel(level) {
   currentLevel = level;
-  deck = [...CARDS.novice];
+  deck = [...CARDS.novice];   // We'll add intermediate & expert later
   idx = 0;
   flipped = false;
   document.getElementById('homeScreen').classList.remove('active');
   document.getElementById('playScreen').classList.add('active');
+  document.getElementById('levelHeader').textContent = level.toUpperCase() + " LEVEL";
   renderCard();
 }
 
 function renderCard() {
   if (idx >= deck.length) {
-    alert("🎉 Novice Level Complete! Great work.");
+    alert("🎉 Level Complete! Great riding!");
     goHome();
     return;
   }
@@ -143,11 +148,10 @@ function flipCard() {
 }
 
 function vote(correct) {
-  // Simple feedback for now
   if (correct) {
-    alert("✅ Nice! You got it.");
+    alert("✅ Excellent! You got it.");
   } else {
-    alert("❌ Keep practicing — you'll get it next time.");
+    alert("❌ No worries — keep practicing.");
   }
   nextCard();
 }
@@ -167,8 +171,7 @@ document.getElementById('cardInner').addEventListener('click', flipCard);
 document.getElementById('gotBtn').addEventListener('click', () => vote(true));
 document.getElementById('missedBtn').addEventListener('click', () => vote(false));
 
-// Start the app
-console.log("✅ Forge MX loaded successfully");
+console.log("✅ Forge MX Training loaded successfully");
 </script>
 </body>
 </html>
