@@ -42,15 +42,17 @@ body {
     <h1 style="font-family:'Bebas Neue',sans-serif; font-size:3.2rem; color:#ff6b00; letter-spacing:3px;">FORGE MX</h1>
     <p style="font-family:'Barlow Condensed',sans-serif; font-size:1.2rem; color:#ccc; margin:8px 0 20px;">Master Your Ride • Coach Brayden Lessler</p>
     
-    <div id="xpDisplay" style="background:rgba(255,107,0,0.1); padding:12px; border-radius:10px; margin:20px 0; font-size:1.1rem;">
-      Total XP: <span id="totalXp">0</span>
+    <div id="xpDisplay" style="background:rgba(255,107,0,0.15); padding:15px; border-radius:12px; margin:20px 0; border:1px solid rgba(255,107,0,0.3);">
+      <strong>Total XP:</strong> <span id="totalXp">0</span>
     </div>
 
-    <button onclick="startLevel('novice')" style="width:90%; background:#00b894; color:white; border:none; padding:18px; font-size:1.3rem; border-radius:10px; margin:10px 0;">🟢 NOVICE LEVEL</button>
-    <button onclick="startLevel('intermediate')" style="width:90%; background:#0984e3; color:white; border:none; padding:18px; font-size:1.3rem; border-radius:10px; margin:10px 0;">🔵 INTERMEDIATE LEVEL</button>
-    <button onclick="startLevel('expert')" style="width:90%; background:#e84040; color:white; border:none; padding:18px; font-size:1.3rem; border-radius:10px; margin:10px 0;">🔴 EXPERT LEVEL</button>
+    <div style="margin:30px 0;">
+      <button onclick="startLevel('novice')" style="width:90%; background:#00b894; color:white; border:none; padding:18px; font-size:1.3rem; border-radius:10px; margin:10px 0;">🟢 NOVICE LEVEL</button>
+      <button onclick="startLevel('intermediate')" style="width:90%; background:#0984e3; color:white; border:none; padding:18px; font-size:1.3rem; border-radius:10px; margin:10px 0;">🔵 INTERMEDIATE LEVEL</button>
+      <button onclick="startLevel('expert')" style="width:90%; background:#e84040; color:white; border:none; padding:18px; font-size:1.3rem; border-radius:10px; margin:10px 0;">🔴 EXPERT LEVEL</button>
+    </div>
 
-    <button onclick="resetProgress()" style="margin-top:30px; background:none; border:1px solid #666; color:#aaa; padding:10px 20px; border-radius:8px;">↺ Reset All Progress</button>
+    <button onclick="resetProgress()" style="margin-top:20px; background:none; border:1px solid #666; color:#aaa; padding:10px 20px; border-radius:8px;">↺ Reset All Progress</button>
 
     <div style="margin-top:40px; font-size:0.9rem; color:#888; line-height:1.5;">
       Strong technique. Steady progress. Real confidence.<br>
@@ -88,33 +90,43 @@ body {
 </div>
 
 <script>
-// ==================== NOVICE CARDS (20) ====================
+// ==================== FULL 20 NOVICE CARDS ====================
 const CARDS = {
   novice: [
-    {icon:"🏍️", q:"What is the clutch and when do you use it?", a:"The <strong>clutch</strong> is the lever on the left handlebar. Use it to start, shift gears, and stop without stalling."},
-    {icon:"⚙️", q:"How do you shift gears on a dirt bike?", a:"Pull the clutch lever, click the gear shifter with your left foot, then release the clutch smoothly."},
-    {icon:"🧢", q:"What are the 5 essential pieces of safety gear?", a:"Helmet (DOT rated), goggles, chest protector, gloves, and boots."},
-    {icon:"🦵", q:"What is the 'attack position'?", a:"Stand on the pegs, knees bent, elbows up, eyes ahead."},
-    {icon:"🌀", q:"Which foot goes forward in a corner?", a:"Your outside foot goes forward on the peg."},
-    {icon:"🏁", q:"What is a 'berm'?", a:"A banked corner. Ride into it and use it to redirect your bike."},
-    {icon:"🛑", q:"Where are the two brakes?", a:"Front = right handlebar lever. Rear = right foot pedal."},
-    {icon:"🔧", q:"How often check tire pressure?", a:"Before every ride. Usually 12–14 PSI."},
-    {icon:"👀", q:"Where should your eyes be?", a:"Always 3–5 seconds ahead."},
-    {icon:"⚠️", q:"Throttle sticks open?", a:"Pull the clutch immediately, then hit the kill switch."}
+    {icon:"🏍️", q:"What is the clutch and when do you use it?", a:"The <strong>clutch</strong> is the lever on the left handlebar. It disconnects the engine from the rear wheel. Use it to start moving, shift gears, and stop without stalling."},
+    {icon:"⚙️", q:"How do you shift gears on a dirt bike?", a:"Pull the <strong>clutch lever</strong>, click the gear shifter with your left foot, then release the clutch smoothly."},
+    {icon:"🧢", q:"What are the 5 essential pieces of safety gear?", a:"<strong>Helmet</strong> (DOT rated), <strong>goggles</strong>, <strong>chest protector</strong>, <strong>gloves</strong>, and <strong>boots</strong>."},
+    {icon:"🦵", q:"What is the 'attack position' in motocross?", a:"Stand on the pegs, knees bent and gripping the bike, elbows up, eyes scanning ahead."},
+    {icon:"🌀", q:"Which foot goes forward in a corner?", a:"Your <strong>outside foot</strong> goes forward on the peg."},
+    {icon:"🏁", q:"What is a 'berm' and how do you ride it?", a:"A <strong>berm</strong> is a banked corner of built-up dirt. Ride into it and let it redirect your bike."},
+    {icon:"🛑", q:"What are the two brakes and where are they located?", a:"Front brake = right handlebar lever. Rear brake = right foot pedal."},
+    {icon:"🔧", q:"How often should you check tire pressure?", a:"Check <strong>before every ride</strong>. Motocross tires typically run <strong>12–14 PSI</strong>."},
+    {icon:"👀", q:"Where should your eyes be when riding?", a:"Always <strong>3–5 seconds ahead</strong> of your current position."},
+    {icon:"⛽", q:"What does it mean when your 2-stroke four-strokes?", a:"The engine is running too rich (too much fuel). It sounds chuggy instead of crisp."},
+    {icon:"🤲", q:"What is engine braking?", a:"When you close the throttle, the engine compression slows the bike down."},
+    {icon:"🔂", q:"What does 'looking through the corner' mean?", a:"Turn your head and eyes toward the exit of the corner as early as possible."},
+    {icon:"⚠️", q:"What do you do if your throttle sticks open?", a:"Pull the clutch immediately, then hit the kill switch."},
+    {icon:"🛞", q:"Why is chain tension important?", a:"A loose chain can derail or snap and lock the rear wheel."},
+    {icon:"💨", q:"How should a beginner approach a whoop section?", a:"Slow down, stay seated, and absorb each whoop with bent knees."},
+    {icon:"🌡️", q:"Why warm up your bike before riding hard?", a:"Warm it for 2–3 minutes so oil circulates properly."},
+    {icon:"🏔️", q:"How should you position your body going downhill?", a:"Shift weight back and low, cover both brakes."},
+    {icon:"🤸", q:"How do you use your legs on the bike?", a:"Your legs are the main shock absorbers. Keep knees bent and gripping."},
+    {icon:"📏", q:"What is the safe following distance?", a:"At least 3–5 bike lengths."},
+    {icon:"🔴", q:"When should you hit the kill switch?", a:"Any time you need to stop the bike instantly."}
   ]
 };
 
-let state = { totalXp: 0 };
+let state = { totalXp: 0, noviceCompleted: 0 };
 
 function loadState() {
   const saved = localStorage.getItem('forgeMX');
   if (saved) state = JSON.parse(saved);
-  document.getElementById('totalXp').textContent = state.totalXp;
+  document.getElementById('totalXp').textContent = state.totalXp || 0;
 }
 
 function saveState() {
   localStorage.setItem('forgeMX', JSON.stringify(state));
-  document.getElementById('totalXp').textContent = state.totalXp;
+  document.getElementById('totalXp').textContent = state.totalXp || 0;
 }
 
 let currentDeck = [];
@@ -136,7 +148,9 @@ function startLevel(level) {
 
 function renderCard() {
   if (currentIdx >= currentDeck.length) {
-    alert("🎉 Level Complete!\nYou earned XP for this session.");
+    state.noviceCompleted = (state.noviceCompleted || 0) + 1;
+    saveState();
+    alert("🎉 Novice Level Complete!\n\nYou've earned XP for this session.");
     goHome();
     return;
   }
@@ -159,11 +173,11 @@ function flipCard() {
 
 function vote(correct) {
   if (correct) {
-    state.totalXp += 10;
+    state.totalXp = (state.totalXp || 0) + 10;
     saveState();
-    alert("✅ Great job! +10 XP");
+    alert("✅ Excellent! +10 XP");
   } else {
-    alert("❌ Keep practicing!");
+    alert("❌ Keep practicing. You'll get it next time.");
   }
   currentIdx++;
   renderCard();
@@ -175,9 +189,9 @@ function goHome() {
 }
 
 function resetProgress() {
-  if (confirm("Reset all progress and XP?")) {
+  if (confirm("Reset all XP and progress? This cannot be undone.")) {
     localStorage.removeItem('forgeMX');
-    state = { totalXp: 0 };
+    state = { totalXp: 0, noviceCompleted: 0 };
     document.getElementById('totalXp').textContent = 0;
     alert("Progress has been reset.");
   }
@@ -189,7 +203,7 @@ document.getElementById('gotBtn').addEventListener('click', () => vote(true));
 document.getElementById('missedBtn').addEventListener('click', () => vote(false));
 
 loadState();
-console.log("✅ Forge MX Training with Gamification Loaded");
+console.log("✅ Forge MX Training - Gamified Version Loaded");
 </script>
 </body>
 </html>
