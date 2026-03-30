@@ -11,7 +11,7 @@
 :root {
   --dirt: #1e1208; --mud: #2e1c0d; --panel: #251508; --orange: #ff6b00;
   --orangeHi: #ff8c33; --white: #f2ead8; --dim: #7a6e60;
-  --novice: #00b894; --inter: #0984e3; --expert: #e84040;
+  --novice: #00b894; --inter: #0984e3; --expert: #e84040; --xpColor: #ffd000;
 }
 * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
 html, body { height:100%; overflow:hidden; }
@@ -38,15 +38,24 @@ body {
 
 <!-- HOME SCREEN -->
 <div class="screen active" id="homeScreen">
-  <div style="padding:40px 20px; text-align:center;">
+  <div style="padding:30px 20px; text-align:center;">
     <h1 style="font-family:'Bebas Neue',sans-serif; font-size:3.2rem; color:#ff6b00; letter-spacing:3px;">FORGE MX</h1>
-    <p style="font-family:'Barlow Condensed',sans-serif; font-size:1.2rem; color:#ccc; margin:10px 0 40px;">Master Your Ride • Coach Brayden Lessler</p>
+    <p style="font-family:'Barlow Condensed',sans-serif; font-size:1.2rem; color:#ccc; margin:8px 0 20px;">Master Your Ride • Coach Brayden Lessler</p>
     
+    <div id="xpDisplay" style="background:rgba(255,107,0,0.1); padding:12px; border-radius:10px; margin:20px 0; font-size:1.1rem;">
+      Total XP: <span id="totalXp">0</span>
+    </div>
+
     <button onclick="startLevel('novice')" style="width:90%; background:#00b894; color:white; border:none; padding:18px; font-size:1.3rem; border-radius:10px; margin:10px 0;">🟢 NOVICE LEVEL</button>
     <button onclick="startLevel('intermediate')" style="width:90%; background:#0984e3; color:white; border:none; padding:18px; font-size:1.3rem; border-radius:10px; margin:10px 0;">🔵 INTERMEDIATE LEVEL</button>
     <button onclick="startLevel('expert')" style="width:90%; background:#e84040; color:white; border:none; padding:18px; font-size:1.3rem; border-radius:10px; margin:10px 0;">🔴 EXPERT LEVEL</button>
 
-    <button onclick="resetProgress()" style="margin-top:40px; background:none; border:1px solid #666; color:#aaa; padding:10px 20px; border-radius:8px;">↺ Reset All Progress</button>
+    <button onclick="resetProgress()" style="margin-top:30px; background:none; border:1px solid #666; color:#aaa; padding:10px 20px; border-radius:8px;">↺ Reset All Progress</button>
+
+    <div style="margin-top:40px; font-size:0.9rem; color:#888; line-height:1.5;">
+      Strong technique. Steady progress. Real confidence.<br>
+      18+ years experience • Personalized motocross coaching
+    </div>
   </div>
 </div>
 
@@ -79,7 +88,7 @@ body {
 </div>
 
 <script>
-// 20 Novice Cards
+// ==================== NOVICE CARDS (20) ====================
 const CARDS = {
   novice: [
     {icon:"🏍️", q:"What is the clutch and when do you use it?", a:"The <strong>clutch</strong> is the lever on the left handlebar. Use it to start, shift gears, and stop without stalling."},
@@ -95,23 +104,39 @@ const CARDS = {
   ]
 };
 
+let state = { totalXp: 0 };
+
+function loadState() {
+  const saved = localStorage.getItem('forgeMX');
+  if (saved) state = JSON.parse(saved);
+  document.getElementById('totalXp').textContent = state.totalXp;
+}
+
+function saveState() {
+  localStorage.setItem('forgeMX', JSON.stringify(state));
+  document.getElementById('totalXp').textContent = state.totalXp;
+}
+
 let currentDeck = [];
 let currentIdx = 0;
 let flipped = false;
 
 function startLevel(level) {
+  loadState();
   currentDeck = CARDS.novice;
   currentIdx = 0;
   flipped = false;
+
   document.getElementById('homeScreen').classList.remove('active');
   document.getElementById('playScreen').classList.add('active');
   document.getElementById('levelHeader').textContent = level.toUpperCase() + " LEVEL";
+
   renderCard();
 }
 
 function renderCard() {
   if (currentIdx >= currentDeck.length) {
-    alert("🎉 Level Complete!");
+    alert("🎉 Level Complete!\nYou earned XP for this session.");
     goHome();
     return;
   }
@@ -133,7 +158,13 @@ function flipCard() {
 }
 
 function vote(correct) {
-  alert(correct ? "✅ Great job!" : "❌ Keep practicing!");
+  if (correct) {
+    state.totalXp += 10;
+    saveState();
+    alert("✅ Great job! +10 XP");
+  } else {
+    alert("❌ Keep practicing!");
+  }
   currentIdx++;
   renderCard();
 }
@@ -144,18 +175,21 @@ function goHome() {
 }
 
 function resetProgress() {
-  if (confirm("Reset all progress?")) {
-    alert("Progress reset.");
-    goHome();
+  if (confirm("Reset all progress and XP?")) {
+    localStorage.removeItem('forgeMX');
+    state = { totalXp: 0 };
+    document.getElementById('totalXp').textContent = 0;
+    alert("Progress has been reset.");
   }
 }
 
-// Attach listeners
+// Event Listeners
 document.getElementById('cardInner').addEventListener('click', flipCard);
 document.getElementById('gotBtn').addEventListener('click', () => vote(true));
 document.getElementById('missedBtn').addEventListener('click', () => vote(false));
 
-console.log("Forge MX Training loaded");
+loadState();
+console.log("✅ Forge MX Training with Gamification Loaded");
 </script>
 </body>
 </html>
