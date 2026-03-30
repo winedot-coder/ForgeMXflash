@@ -1,190 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Forge MX">
-<meta name="theme-color" content="#ff6b00">
-<title>Forge MX Training — Master Your Ride</title>
-<link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icon-192.png">
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Barlow:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
-<style>
-/* Your entire CSS remains unchanged - I kept it exactly as you had it */
-:root {
-  --dirt: #1e1208;
-  --mud: #2e1c0d;
-  --panel: #251508;
-  --orange: #ff6b00;
-  --orangeHi: #ff8c33;
-  --yellow: #ffd000;
-  --white: #f2ead8;
-  --dim: #7a6e60;
-  --novice: #00b894;
-  --inter: #0984e3;
-  --expert: #e84040;
-  --xpColor: #ffd000;
-}
-* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-html, body { height:100%; overflow:hidden; }
-body {
-  font-family:'Barlow',sans-serif;
-  background: var(--dirt);
-  color: var(--white);
-  display:flex; flex-direction:column;
-  max-width:480px; margin:0 auto;
-  position:relative;
-  user-select:none;
-}
-.screen { display:none; flex-direction:column; height:100%; overflow:hidden; }
-.screen.active { display:flex; }
-
-/* ... all your other CSS styles (home, play, result, card flip, etc.) go here ... */
-.card-inner {
-  width:100%;
-  transform-style:preserve-3d;
-  transition: transform 0.5s cubic-bezier(0.4,0.2,0.2,1);
-  cursor:pointer;
-}
-.card-inner.flipped { transform:rotateY(180deg); }
-
-/* Keep all your other CSS exactly as in the original file */
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#ff6b00">
+    <title>Forge MX Training</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Barlow:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --dirt: #1e1208; --orange: #ff6b00; --white: #f2ead8; --dim: #7a6e60;
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            font-family: 'Barlow', sans-serif;
+            background: var(--dirt);
+            color: var(--white);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+        }
+        h1 { font-family: 'Bebas Neue', sans-serif; font-size: 2.5rem; color: var(--orange); margin-bottom: 20px; }
+        p { font-size: 1.1rem; line-height: 1.5; max-width: 400px; margin: 0 auto; }
+    </style>
 </head>
 <body>
+    <div>
+        <h1>🚧 Forge MX Training</h1>
+        <p>If you see this message, the site loaded successfully.<br><br>
+        The full app will appear here once we fix the JavaScript.</p>
+    </div>
 
-<!-- Your HTML structure stays the same until the script -->
-<!-- ... (homeScreen, playScreen, resultScreen, install banner) ... -->
-
-<!-- PLAY SCREEN (only showing the important changed part) -->
-<div class="screen" id="playScreen">
-  <!-- header, xp strip, cat ribbon, card stage remain the same -->
-
-  <div class="vote-row" id="voteRow" style="display:none">
-    <button type="button" class="vote-btn vote-missed" id="missedBtn">❌ Missed It</button>
-    <button type="button" class="vote-btn vote-got" id="gotBtn">✅ Got It!</button>
-  </div>
-
-  <div class="play-nav">
-    <button type="button" class="nav-btn nav-prev" onclick="prevCard()">←</button>
-    <button type="button" class="nav-btn nav-shuffle" onclick="shuffleDeck()">⇌</button>
-    <button type="button" class="nav-btn nav-next" onclick="nextCard()">NEXT →</button>
-  </div>
-</div>
-
-<!-- Rest of your HTML (result screen, install banner) remains the same -->
-
-<script>
-// ==================== CARD DATA (keep all your original CARDS, BADGE_DEFS, etc.) ====================
-const CARDS = {
-  novice: [ /* paste all your novice cards here */ ],
-  intermediate: [ /* paste all your intermediate cards here */ ],
-  expert: [ /* paste all your expert cards here */ ]
-};
-
-// Keep all your state, ranks, renderHome, startLevel, renderCard, finishSession, etc. exactly as before
-
-let state = loadState();
-let currentLevel = 'novice';
-let deck = [];
-let idx = 0;
-let flipped = false;
-let sessionCorrect = 0;
-let sessionXp = 0;
-let streak = 0;
-let bestStreak = 0;
-
-// ... (your other functions: defaultState, loadState, saveState, getRank, renderHome, startLevel, renderCard, updatePlayXp, showXpPopup, finishSession, playAgain, goHome, resetProgress, showScreen) ...
-
-// ==================== IMPROVED FLIP & VOTE ====================
-function flipCard() {
-  if (!flipped) {
-    flipped = true;
-    const card = document.getElementById('cardInner');
-    card.classList.add('flipped');
-    document.getElementById('voteRow').style.display = 'flex';
-    void card.offsetWidth; // force reflow for mobile
-  }
-}
-
-function vote(correct) {
-  console.log('Vote called:', correct ? 'Got It' : 'Missed It'); // for debugging
-  const xpEarned = correct ? (5 + streak * 2) : 0;
-  if (correct) {
-    streak++;
-    if (streak > bestStreak) bestStreak = streak;
-    sessionCorrect++;
-    sessionXp += xpEarned;
-    state.totalXp += xpEarned;
-    if (xpEarned > 0) showXpPopup('+' + xpEarned + ' XP');
-  } else {
-    streak = 0;
-  }
-  document.getElementById('streakVal').textContent = streak;
-  updatePlayXp();
-  saveState();
-  nextCard();
-}
-
-// ==================== EVENT LISTENERS (this is the key fix) ====================
-function initCardListeners() {
-  const cardInner = document.getElementById('cardInner');
-  const missedBtn = document.getElementById('missedBtn');
-  const gotBtn = document.getElementById('gotBtn');
-
-  // Tap anywhere on card to flip
-  cardInner.addEventListener('click', flipCard);
-
-  // Vote buttons - using both inline and listeners for maximum compatibility
-  missedBtn.addEventListener('click', () => vote(false));
-  gotBtn.addEventListener('click', () => vote(true));
-
-  // Touch swipe for navigation (after flipped)
-  let touchStartX = 0;
-  cardInner.addEventListener('touchstart', e => {
-    touchStartX = e.changedTouches[0].screenX;
-  }, { passive: true });
-
-  cardInner.addEventListener('touchend', e => {
-    if (!flipped) {
-      flipCard();
-      return;
-    }
-    const dx = e.changedTouches[0].screenX - touchStartX;
-    if (Math.abs(dx) > 80) {
-      if (dx < 0) nextCard();
-      else prevCard();
-    }
-  }, { passive: true });
-}
-
-// Call this after the card is rendered
-function renderCard() {
-  // ... your original renderCard code ...
-  flipped = false;
-  document.getElementById('cardInner').classList.remove('flipped');
-  document.getElementById('voteRow').style.display = 'none';
-  // ... rest of your card population code ...
-
-  // Re-attach listeners after rendering new card
-  setTimeout(initCardListeners, 10);
-}
-
-// Keyboard support
-document.addEventListener('keydown', e => {
-  if (document.getElementById('playScreen').classList.contains('active')) {
-    if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); flipCard(); }
-    else if (e.key === 'ArrowRight') { if (flipped) nextCard(); else flipCard(); }
-    else if (e.key === 'ArrowLeft') prevCard();
-    else if (e.key.toLowerCase() === 'g') { if (flipped) vote(true); }
-    else if (e.key.toLowerCase() === 'm') { if (flipped) vote(false); }
-  }
-});
-
-// Initial setup
-renderHome();
-</script>
+    <script>
+        // Simple test to confirm JS is running
+        console.log("✅ JavaScript is running on Render");
+        
+        // Your full app code will go here once we confirm the page loads
+        alert("Site loaded! If you see this alert, the blank page issue is fixed.");
+    </script>
 </body>
 </html>
