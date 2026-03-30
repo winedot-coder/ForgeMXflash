@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Forge MX">
+<meta name="theme-color" content="#ff6b00">
+<title>Forge MX Training — Master Your Ride</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Barlow:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --dirt: #1e1208;
+  --mud: #2e1c0d;
+  --panel: #251508;
+  --orange: #ff6b00;
+  --orangeHi: #ff8c33;
+  --yellow: #ffd000;
+  --white: #f2ead8;
+  --dim: #7a6e60;
+  --novice: #00b894;
+  --inter: #0984e3;
+  --expert: #e84040;
+  --xpColor: #ffd000;
+  --safe: env(safe-area-inset-bottom, 0px);
+}
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html, body { height:100%; overflow:hidden; }
+body {
+  font-family:'Barlow',sans-serif;
+  background: var(--dirt);
+  color: var(--white);
+  display:flex; flex-direction:column;
+  max-width:480px; margin:0 auto;
+  position:relative;
+  user-select:none;
+}
+
+/* ===== SCREEN MANAGER ===== */
+.screen { display:none; flex-direction:column; height:100%; overflow:hidden; }
+.screen.active { display:flex; }
+
+/* ===== HOME SCREEN ===== */
+#homeScreen {
+  background: linear-gradient(170deg, #2e1a08 0%, #1a0d04 100%);
+  align-items:center; justify-content:center;
+  padding: 32px 24px;
+  gap: 0;
+}
+.home-logo-img {
+  width: 100%;
+  max-width: 320px;
+  margin-bottom: 4px;
+  display:flex; justify-content:center;
+}
+.home-logo-img img {
+  width: 100%;
+  max-width: 320px;
+  height: auto;
+  filter: drop-shadow(0px 2px 8px rgba(255,107,0,0.3));
+}
+.home-tagline {
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:12px; letter-spacing:4px; color:var(--dim);
+  text-transform:uppercase; text-align:center;
+  margin-bottom: 36px;
+}
+.home-xp-card {
+  background: rgba(255,107,0,0.08);
+  border: 1px solid rgba(255,107,0,0.2);
+  border-radius:8px;
+  padding: 16px 24px;
+  width:100%;
+  display:flex; align-items:center; gap:16px;
+  margin-bottom: 28px;
+}
+.home-avatar {
+  width:52px; height:52px; border-radius:10px;
+  background: linear-gradient(135deg,#2a1500,#1a0d00);
+  border: 1px solid rgba(255,107,0,0.35);
+  display:flex; align-items:center; justify-content:center;
+  flex-shrink:0;
+  box-shadow: 0 0 16px rgba(255,107,0,0.25);
+}
+.home-avatar svg { width:32px; height:32px; }
+.home-xp-info { flex:1; }
+.home-rider-name {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:22px; letter-spacing:2px;
+  color:var(--white);
+}
+.home-level-text {
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:11px; letter-spacing:2px; color:var(--dim);
+  text-transform:uppercase; margin-bottom:6px;
+}
+.home-xp-bar-wrap { background:rgba(255,255,255,0.08); border-radius:4px; height:6px; width:100%; }
+.home-xp-bar { height:100%; background:var(--xpColor); border-radius:4px; transition:width .4s; box-shadow:0 0 6px var(--xpColor); }
+.home-xp-label { font-size:11px; color:var(--dim); margin-top:4px; font-family:'Barlow Condensed',sans-serif; letter-spacing:1px; }
+
+.level-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; width:100%; margin-bottom:20px; }
+.level-btn {
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:6px; padding:16px 8px;
+  border:none; border-radius:8px; cursor:pointer;
+  font-family:'Bebas Neue',sans-serif; font-size:18px; letter-spacing:2px;
+  transition: transform .12s, box-shadow .12s;
+  position:relative; overflow:hidden;
+}
+.level-btn:active { transform:scale(0.96); }
+.level-btn.nov { background:linear-gradient(135deg,#00a07e,#007a60); color:#fff; box-shadow:0 4px 16px rgba(0,184,148,0.3); }
+.level-btn.int { background:linear-gradient(135deg,#0984e3,#0660b0); color:#fff; box-shadow:0 4px 16px rgba(9,132,227,0.3); }
+.level-btn.exp { background:linear-gradient(135deg,#e84040,#b02020); color:#fff; box-shadow:0 4px 16px rgba(232,64,64,0.3); }
+.level-btn .btn-icon { font-size:28px; }
+.level-btn .btn-count {
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:11px; letter-spacing:1px; opacity:0.8;
+}
+.level-btn .btn-stars { font-size:11px; letter-spacing:1px; }
+
+.home-badges-row {
+  display:flex; gap:8px; justify-content:center;
+  margin-bottom:16px; flex-wrap:wrap;
+}
+.badge-chip {
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:11px; letter-spacing:1px; padding:4px 10px;
+  border-radius:20px; text-transform:uppercase;
+  display:flex; align-items:center; gap:4px;
+}
+.badge-chip.earned { background:rgba(255,208,0,0.15); border:1px solid rgba(255,208,0,0.4); color:var(--xpColor); }
+.badge-chip.locked { background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); color:var(--dim); }
+
+.reset-btn {
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:11px; letter-spacing:2px; text-transform:uppercase;
+  color:var(--dim); background:none; border:none; cursor:pointer;
+  padding:8px;
+}
+.reset-btn:hover { color:var(--white); }
+
+/* ===== PLAY SCREEN ===== */
+#playScreen {
+  background: var(--dirt);
+  background-image: radial-gradient(ellipse at 10% 90%, rgba(255,107,0,0.05) 0%, transparent 55%);
+}
+
+.play-header {
+  display:flex; align-items:center; gap:10px;
+  padding: 12px 16px;
+  padding-top: calc(12px + env(safe-area-inset-top, 0px));
+  background: var(--panel);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  flex-shrink:0;
+}
+.back-btn {
+  font-family:'Bebas Neue',sans-serif; font-size:20px; letter-spacing:1px;
+  background:none; border:none; color:var(--orange); cursor:pointer; padding:4px 8px 4px 0;
+}
+.play-level-badge {
+  font-family:'Bebas Neue',sans-serif; font-size:13px; letter-spacing:2px;
+  padding:3px 12px; border-radius:3px; text-transform:uppercase;
+}
+.play-level-badge.novice { background:var(--novice); color:#fff; }
+.play-level-badge.intermediate { background:var(--inter); color:#fff; }
+.play-level-badge.expert { background:var(--expert); color:#fff; }
+
+.play-progress-row {
+  display:flex; align-items:center; gap:8px; flex:1;
+}
+.play-prog-track { flex:1; height:4px; background:rgba(255,255,255,0.08); border-radius:2px; overflow:hidden; }
+.play-prog-fill { height:100%; background:var(--orange); border-radius:2px; transition:width .3s; box-shadow:0 0 6px var(--orange); }
+.play-prog-label { font-family:'Barlow Condensed',sans-serif; font-size:13px; letter-spacing:1px; color:var(--dim); white-space:nowrap; }
+
+.play-xp-strip {
+  display:flex; align-items:center; gap:8px;
+  padding:6px 16px;
+  background: rgba(0,0,0,0.3);
+  flex-shrink:0;
+}
+.play-xp-strip .xp-flame { font-size:14px; }
+.play-xp-strip .xp-val {
+  font-family:'Bebas Neue',sans-serif; font-size:16px; letter-spacing:1px; color:var(--xpColor);
+}
+.play-xp-strip .streak-box {
+  margin-left:auto;
+  font-family:'Barlow Condensed',sans-serif; font-size:12px; letter-spacing:1px; color:var(--dim);
+  display:flex; align-items:center; gap:4px;
+}
+.play-xp-strip .streak-val { color:var(--orange); font-weight:700; }
+
+/* Category ribbon */
+.cat-ribbon {
+  display:flex; align-items:center; justify-content:center; gap:8px;
+  padding: 8px 16px;
+  font-family:'Barlow Condensed',sans-serif; font-size:12px; letter-spacing:2px; text-transform:uppercase;
+  color:var(--dim);
+  flex-shrink:0;
+}
+.cat-dot { width:6px; height:6px; border-radius:50%; background:var(--dim); }
+
+/* CARD */
+.card-stage {
+  flex:1; display:flex; align-items:center; justify-content:center;
+  padding:12px 16px;
+  perspective:1400px;
+  overflow:hidden;
+}
+.card-wrap {
+  width:100%; max-width:420px;
+  position:relative;
+}
+.card-inner {
+  width:100%;
+  transform-style:preserve-3d;
+  transition: transform 0.5s cubic-bezier(0.4,0.2,0.2,1);
+  cursor:pointer;
+}
+.card-inner.flipped { transform:rotateY(180deg); }
+
+.card-face {
+  width:100%;
+  backface-visibility:hidden;
+  -webkit-backface-visibility:hidden;
+  border-radius:10px;
+  overflow:hidden;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.6), 0 2px 0 rgba(255,255,255,0.04) inset;
+}
+.card-back-face {
+  position:absolute; top:0; left:0;
+  transform:rotateY(180deg);
+}
+.card-front-face { background: var(--mud); }
+.card-back-face-inner { background:#111; }
+
+.card-top-bar { height:5px; width:100%; }
+.card-top-bar.novice { background:linear-gradient(90deg,var(--novice),#00e0b0); }
+.card-top-bar.intermediate { background:linear-gradient(90deg,var(--inter),#74b9ff); }
+.card-top-bar.expert { background:linear-gradient(90deg,var(--expert),#ff7979); }
+
+.card-content-front {
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  padding:28px 24px 24px; text-align:center; min-height:260px;
+}
+.card-emoji { font-size:44px; margin-bottom:14px; filter:drop-shadow(0 0 10px rgba(255,107,0,0.3)); }
+.card-q {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(24px,6vw,34px);
+  letter-spacing:1.5px; line-height:1.1; color:var(--white);
+}
+.tap-cue {
+  margin-top:18px; font-family:'Barlow Condensed',sans-serif;
+  font-size:11px; letter-spacing:3px; color:var(--dim);
+  display:flex; align-items:center; gap:6px;
+  animation:breathe 2.5s ease-in-out infinite;
+}
+
+.forge-watermark {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:9px; letter-spacing:3px; text-transform:uppercase;
+  color:rgba(255,107,0,0.25); margin-bottom:8px;
+  align-self:flex-start;
+}
+.tap-cue::before,.tap-cue::after { content:''; display:block; height:1px; width:16px; background:var(--dim); }
+@keyframes breathe { 0%,100%{opacity:.3} 50%{opacity:.7} }
+
+.card-content-back {
+  display:flex; flex-direction:column; align-items:center;
+  padding:22px 22px 20px; min-height:260px;
+}
+.answer-tag {
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:10px; letter-spacing:3px; text-transform:uppercase;
+  color:var(--orange); margin-bottom:10px; align-self:flex-start;
+}
+.card-answer {
+  font-size:14.5px; line-height:1.65; color:#ccc4b4;
+  text-align:left; width:100%;
+}
+.card-answer strong { color:var(--orangeHi); font-weight:600; }
+.card-tip {
+  margin-top:14px; width:100%;
+  background:rgba(255,107,0,0.07);
+  border-left:3px solid var(--orange);
+  padding:10px 12px;
+  border-radius:0 5px 5px 0;
+  font-size:12.5px; line-height:1.55; color:#998f80; font-style:italic;
+}
+
+/* VOTE BUTTONS */
+.vote-row {
+  display:flex; gap:10px;
+  padding:12px 16px;
+  flex-shrink:0;
+}
+.vote-btn {
+  flex:1; padding:14px;
+  font-family:'Bebas Neue',sans-serif; font-size:17px; letter-spacing:2px;
+  border:none; border-radius:6px; cursor:pointer;
+  transition:transform .12s, box-shadow .12s;
+  display:flex; align-items:center; justify-content:center; gap:6px;
+}
+.vote-btn:active { transform:scale(0.95); }
+.vote-got {
+  background:linear-gradient(135deg,#00b894,#007a60);
+  color:#fff; box-shadow:0 4px 14px rgba(0,184,148,0.35);
+}
+.vote-missed {
+  background: rgba(255,255,255,0.06);
+  color:var(--dim); border:1px solid rgba(255,255,255,0.08);
+}
+
+/* NAV */
+.play-nav {
+  display:flex; gap:8px;
+  padding:10px 16px;
+  padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+  background:var(--panel); border-top:1px solid rgba(255,255,255,0.05);
+  flex-shrink:0;
+}
+.nav-btn {
+  flex:1; padding:12px;
+  font-family:'Bebas Neue',sans-serif; font-size:17px; letter-spacing:2px;
+  border:none; border-radius:5px; cursor:pointer;
+  transition:all .12s;
+}
+.nav-btn:active { transform:scale(0.96); }
+.nav-prev { background:rgba(255,255,255,0.06); color:var(--dim); border:1px solid rgba(255,255,255,0.07); }
+.nav-next { background:var(--orange); color:#fff; box-shadow:0 4px 14px rgba(255,107,0,0.4); flex:2; }
+.nav-shuffle { background:rgba(255,255,255,0.04); color:var(--dim); border:1px solid rgba(255,255,255,0.06); flex:0; padding:12px 14px; font-size:16px; }
+
+/* ===== RESULT SCREEN ===== */
+#resultScreen {
+  background:radial-gradient(ellipse at 50% 30%, #2e1a00 0%, var(--dirt) 70%);
+  align-items:center; justify-content:center; text-align:center;
+  padding:32px 24px;
+  gap:16px;
+}
+.result-trophy { font-size:72px; animation:trophy-bounce .6s ease backwards; }
+@keyframes trophy-bounce { 0%{transform:scale(0) rotate(-15deg)} 80%{transform:scale(1.15) rotate(3deg)} 100%{transform:scale(1) rotate(0)} }
+.result-headline { font-family:'Bebas Neue',sans-serif; font-size:52px; letter-spacing:4px; color:var(--white); text-shadow:3px 3px 0 var(--orange); }
+.result-sub { font-family:'Barlow Condensed',sans-serif; font-size:14px; letter-spacing:2px; color:var(--dim); text-transform:uppercase; }
+.result-stats {
+  display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; width:100%; max-width:360px;
+}
+.rstat {
+  background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.07);
+  border-radius:8px; padding:16px 8px;
+}
+.rstat-val { font-family:'Bebas Neue',sans-serif; font-size:34px; letter-spacing:2px; color:var(--orange); }
+.rstat-lbl { font-family:'Barlow Condensed',sans-serif; font-size:11px; letter-spacing:1px; color:var(--dim); text-transform:uppercase; }
+.badge-earned-box {
+  background:rgba(255,208,0,0.08); border:1px solid rgba(255,208,0,0.25);
+  border-radius:10px; padding:16px 20px;
+  display:flex; align-items:center; gap:12px;
+  width:100%; max-width:360px;
+  animation: fadeInUp .4s ease .2s backwards;
+}
+@keyframes fadeInUp { 0%{opacity:0;transform:translateY(12px)} 100%{opacity:1;transform:translateY(0)} }
+.badge-earned-icon { font-size:36px; }
+.badge-earned-text { text-align:left; }
+.badge-earned-label { font-family:'Barlow Condensed',sans-serif; font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--xpColor); }
+.badge-earned-name { font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:2px; color:var(--white); }
+
+.result-btns { display:flex; flex-direction:column; gap:10px; width:100%; max-width:360px; }
+.result-btn {
+  padding:16px;
+  font-family:'Bebas Neue',sans-serif; font-size:20px; letter-spacing:3px;
+  border:none; border-radius:6px; cursor:pointer; transition:all .12s;
+}
+.result-btn:active { transform:scale(0.97); }
+.btn-play-again { background:var(--orange); color:#fff; box-shadow:0 4px 16px rgba(255,107,0,0.4); }
+.btn-home { background:rgba(255,255,255,0.06); color:var(--dim); border:1px solid rgba(255,255,255,0.08); }
+
+/* XP POPUP */
+.xp-popup {
+  position:fixed; bottom:120px; left:50%; transform:translateX(-50%);
+  background:var(--xpColor); color:#1a0d00;
+  font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:2px;
+  padding:8px 20px; border-radius:20px;
+  pointer-events:none; z-index:999;
+  animation: xpPop .9s ease forwards;
+  box-shadow: 0 4px 16px rgba(255,208,0,0.5);
+}
+@keyframes xpPop {
+  0%{opacity:0;transform:translateX(-50%) translateY(0) scale(.8)}
+  20%{opacity:1;transform:translateX(-50%) translateY(-10px) scale(1)}
+  80%{opacity:1;transform:translateX(-50%) translateY(-20px) scale(1)}
+  100%{opacity:0;transform:translateX(-50%) translateY(-30px) scale(.9)}
+}
+
+/* SWIPE HINT */
+.swipe-hint {
+  position:absolute; bottom:10px; left:50%; transform:translateX(-50%);
+  font-family:'Barlow Condensed',sans-serif; font-size:10px; letter-spacing:2px;
+  color:rgba(255,255,255,0.12); text-transform:uppercase; pointer-events:none;
+}
+
+/* install banner */
+.install-banner {
+  position:fixed; bottom:0; left:0; right:0;
+  background: var(--panel); border-top:2px solid var(--orange);
+  padding:14px 20px; padding-bottom:calc(14px + env(safe-area-inset-bottom,0px));
+  display:flex; align-items:center; gap:12px; z-index:1000;
+  transform:translateY(100%); transition:transform .3s;
+}
+.install-banner.show { transform:translateY(0); }
+.install-icon { font-size:28px; }
+.install-text { flex:1; }
+.install-text strong { font-family:'Bebas Neue',sans-serif; font-size:16px; letter-spacing:1px; }
+.install-text p { font-size:11px; color:var(--dim); font-family:'Barlow Condensed',sans-serif; letter-spacing:1px; }
+.install-do {
+  font-family:'Bebas Neue',sans-serif; font-size:16px; letter-spacing:1px;
+  background:var(--orange); color:#fff; border:none; border-radius:5px;
+  padding:8px 16px; cursor:pointer;
+}
+.install-close {
+  font-size:18px; background:none; border:none; color:var(--dim); cursor:pointer; padding:4px;
+}
+
+/* Tire track accent */
+.tire-track { height:4px; background:repeating-linear-gradient(90deg,var(--orange) 0,var(--orange) 10px,transparent 10px,transparent 18px); opacity:.25; flex-shrink:0; }
+
+/* Forge MX Footer */
+.forge-footer {
+  display:flex; flex-direction:column; align-items:center; gap:6px;
+  padding: 12px 20px 4px;
+  width:100%;
+}
+.forge-site-link {
+  font-family:'Bebas Neue',sans-serif; font-size:16px; letter-spacing:2px;
+  color:var(--orange); text-decoration:none;
+}
+.forge-site-link:hover { color:var(--orangeHi); }
+.forge-contact-row { display:flex; gap:16px; flex-wrap:wrap; justify-content:center; }
+.forge-contact {
+  font-family:'Barlow Condensed',sans-serif; font-size:12px; letter-spacing:1px;
+  color:var(--dim); text-decoration:none;
+}
+.forge-contact:hover { color:var(--white); }
+.forge-credit {
+  font-family:'Barlow Condensed',sans-serif; font-size:10px; letter-spacing:1px;
+  color:rgba(255,255,255,0.15); text-align:center; text-transform:uppercase;
+}
+</style>
+</head>
+<body>
+
+<!-- ====== HOME SCREEN ====== -->
+<div class="screen active" id="homeScreen">
+  <div class="tire-track"></div>
+  <div class="home-logo-img"><img src="data:image/webp;base64,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" alt="Forge MX Training" /></div>
+  <div class="home-tagline">Master Your Ride · Brayden Lessler</div>
+
+  <div class="home-xp-card">
+    <div class="home-avatar">
+      <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Anvil / Forge icon -->
+        <rect x="6" y="18" width="20" height="6" rx="2" fill="#ff6b00"/>
+        <rect x="9" y="22" width="14" height="4" rx="1" fill="#c44a00"/>
+        <path d="M10 18 C10 10 14 8 16 7 C18 8 22 10 22 18 Z" fill="#ff8c33"/>
+        <path d="M13 18 C13 13 15 11 16 10 C17 11 19 13 19 18 Z" fill="#ffd000"/>
+        <rect x="14" y="24" width="4" height="5" rx="1" fill="#c44a00"/>
+      </svg>
+    </div>
+    <div class="home-xp-info">
+      <div class="home-rider-name" id="riderRank">MX Student</div>
+      <div class="home-xp-bar-wrap">
+        <div class="home-xp-bar" id="homeXpBar" style="width:0%"></div>
+      </div>
+      <div class="home-xp-label" id="homeXpLabel">0 XP</div>
+    </div>
+  </div>
+
+  <div class="level-grid">
+    <button class="level-btn nov" onclick="startLevel('novice')">
+      <span class="btn-icon">🟢</span>
+      NOVICE
+      <span class="btn-count" id="novCount">20 Cards</span>
+      <span class="btn-stars" id="novStars">⭐⭐⭐</span>
+    </button>
+    <button class="level-btn int" onclick="startLevel('intermediate')">
+      <span class="btn-icon">🔵</span>
+      INTER
+      <span class="btn-count" id="intCount">20 Cards</span>
+      <span class="btn-stars" id="intStars">⭐⭐⭐</span>
+    </button>
+    <button class="level-btn exp" onclick="startLevel('expert')">
+      <span class="btn-icon">🔴</span>
+      EXPERT
+      <span class="btn-count" id="expCount">20 Cards</span>
+      <span class="btn-stars" id="expStars">⭐⭐⭐</span>
+    </button>
+  </div>
+
+  <div class="home-badges-row" id="homeBadgesRow"></div>
+
+  <button class="reset-btn" onclick="resetProgress()">↺ Reset Progress</button>
+
+  <div class="forge-footer">
+    <a href="https://www.forgemxtraining.com" target="_blank" class="forge-site-link">🌐 forgemxtraining.com</a>
+    <div class="forge-contact-row">
+      <a href="tel:7602719098" class="forge-contact">📞 760-271-9098</a>
+      <a href="/cdn-cgi/l/email-protection#16547a7365657a73642f2656717b777f7a3875797b" class="forge-contact">✉ <span class="__cf_email__" data-cfemail="3577595046465950470c05755258545c591b565a58">[email&#160;protected]</span></a>
+    </div>
+    <div class="forge-credit">Training cards by Forge MX · Coach Brayden Lessler · 18 yrs experience</div>
+  </div>
+  <div class="tire-track"></div>
+</div>
+
+<!-- ====== PLAY SCREEN ====== -->
+<div class="screen" id="playScreen">
+  <div class="play-header">
+    <button class="back-btn" onclick="goHome()">← FORGE</button>
+    <div class="play-level-badge" id="levelBadge">NOVICE</div>
+    <div class="play-progress-row">
+      <div class="play-prog-track"><div class="play-prog-fill" id="playProg"></div></div>
+      <div class="play-prog-label" id="playProgLabel">1/20</div>
+    </div>
+  </div>
+  <div class="play-xp-strip">
+    <span class="xp-flame">⚡</span>
+    <span class="xp-val" id="playXpVal">0 XP</span>
+    <div class="streak-box">🔥 Streak: <span class="streak-val" id="streakVal">0</span></div>
+  </div>
+  <div class="cat-ribbon">
+    <div class="cat-dot" id="catDot"></div>
+    <span id="catLabel">Category</span>
+  </div>
+  <div class="card-stage">
+    <div class="card-wrap">
+      <div class="card-inner" id="cardInner" onclick="flipCard()">
+        <!-- FRONT -->
+        <div class="card-face card-front-face">
+          <div class="card-top-bar" id="frontBar"></div>
+          <div class="card-content-front">
+            <div class="forge-watermark">FORGE MX TRAINING</div>
+            <div class="card-emoji" id="cardEmoji">🏍️</div>
+            <div class="card-q" id="cardQ">Loading…</div>
+            <div class="tap-cue">Tap to reveal</div>
+          </div>
+        </div>
+        <!-- BACK -->
+        <div class="card-face card-back-face">
+          <div class="card-back-face-inner">
+            <div class="card-top-bar" id="backBar"></div>
+            <div class="card-content-back">
+              <div class="answer-tag">Answer</div>
+              <div class="card-answer" id="cardAns"></div>
+              <div class="card-tip" id="cardTipEl"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="swipe-hint">← PREV &nbsp;&nbsp; NEXT →</div>
+    </div>
+  </div>
+
+  <div class="vote-row" id="voteRow" style="display:none">
+    <button class="vote-btn vote-missed" onclick="vote(false)">❌ Missed It</button>
+    <button class="vote-btn vote-got" onclick="vote(true)">✅ Got It!</button>
+  </div>
+
+  <div class="play-nav">
+    <button class="nav-btn nav-prev" onclick="prevCard()">←</button>
+    <button class="nav-btn nav-shuffle" onclick="shuffleDeck()">⇌</button>
+    <button class="nav-btn nav-next" onclick="nextCard()">NEXT →</button>
+  </div>
+</div>
+
+<!-- ====== RESULT SCREEN ====== -->
+<div class="screen" id="resultScreen">
+  <div class="result-trophy" id="resultTrophy">🏆</div>
+  <div class="result-headline" id="resultHeadline">RIPPED IT!</div>
+  <div class="result-sub" id="resultSub">Forge MX · Novice Level Complete</div>
+  <div class="result-stats">
+    <div class="rstat"><div class="rstat-val" id="rsCorrect">0</div><div class="rstat-lbl">Got It</div></div>
+    <div class="rstat"><div class="rstat-val" id="rsStreak">0</div><div class="rstat-lbl">Best Streak</div></div>
+    <div class="rstat"><div class="rstat-val" id="rsXp">+0</div><div class="rstat-lbl">XP Earned</div></div>
+  </div>
+  <div class="badge-earned-box" id="badgeEarnedBox" style="display:none">
+    <div class="badge-earned-icon" id="beIcon"></div>
+    <div class="badge-earned-text">
+      <div class="badge-earned-label">Badge Unlocked!</div>
+      <div class="badge-earned-name" id="beName"></div>
+    </div>
+  </div>
+  <div class="result-btns">
+    <button class="result-btn btn-play-again" onclick="playAgain()">RIDE AGAIN</button>
+    <button class="result-btn btn-home" onclick="goHome()">← GARAGE</button>
+  </div>
+</div>
+
+<!-- Install Banner -->
+<div class="install-banner" id="installBanner">
+  <div class="install-icon">📲</div>
+  <div class="install-text">
+    <strong>Install Forge MX Cards</strong>
+    <p>Tap Share → Add to Home Screen</p>
+  </div>
+  <button class="install-do" onclick="document.getElementById('installBanner').classList.remove('show')">Got it</button>
+  <button class="install-close" onclick="document.getElementById('installBanner').classList.remove('show')">✕</button>
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// ============================================================
+// CARD DATA — 20 per level
+// ============================================================
+const CARDS = {
+novice: [
+  {icon:"🏍️",cat:"Bike Basics",q:"What is the clutch and when do you use it?",a:"The <strong>clutch</strong> is the lever on the left handlebar. It disconnects the engine from the rear wheel. Use it to start moving, shift gears, and stop without stalling.",tip:"Tip: Feather the clutch smoothly — don't snap it. Think of easing a door open, not yanking it."},
+  {icon:"⚙️",cat:"Bike Basics",q:"How do you shift gears on a dirt bike?",a:"Pull the <strong>clutch lever</strong>, click the gear shifter up or down with your left foot, then release the clutch smoothly. Gear order: 1st → neutral → 2nd → 3rd → 4th → 5th.",tip:"Tip: Listen to the engine. Screaming = shift up. Lugging = shift down."},
+  {icon:"🧢",cat:"Safety Gear",q:"What are the 5 essential pieces of safety gear?",a:"<strong>Helmet</strong> (DOT/SNELL rated), <strong>goggles</strong>, <strong>chest protector / body armor</strong>, <strong>gloves</strong>, and <strong>boots</strong>. Never ride without all five.",tip:"Tip: Your helmet should fit snugly. Replace any helmet after a major impact — even if it looks fine."},
+  {icon:"🦵",cat:"Body Position",q:"What is the 'attack position' in motocross?",a:"Stand on the pegs, <strong>knees bent and gripping the bike</strong>, elbows up, back slightly forward, eyes scanning ahead. It's your ready stance for everything on the track.",tip:"Tip: Think linebacker — athletic, balanced, ready to react. Never sit when in doubt."},
+  {icon:"🌀",cat:"Cornering",q:"Which foot goes forward in a corner?",a:"Your <strong>outside foot</strong> goes forward on the peg (foot on the outside of the turn). This gives you balance, control, and stability through corners.",tip:"Tip: Point your inside knee toward the turn too. It naturally shifts your weight correctly."},
+  {icon:"🏁",cat:"Track",q:"What is a 'berm' and how do you ride it?",a:"A <strong>berm</strong> is a banked corner of built-up dirt. Use it as a wall — ride into it, let it redirect your bike, then accelerate hard as you exit.",tip:"Tip: The higher on the berm you hit, the more exit speed you carry. Always find the fastest line."},
+  {icon:"🛑",cat:"Braking",q:"What are the two brakes and where are they located?",a:"The <strong>front brake</strong> is the lever on the right handlebar. The <strong>rear brake</strong> is the pedal near your right foot. Use both together for best stopping power.",tip:"Tip: The front brake provides ~70% of stopping power. Apply it smoothly — never grab it suddenly."},
+  {icon:"🔧",cat:"Maintenance",q:"How often should you check tire pressure?",a:"Check <strong>before every ride</strong>. Motocross tires typically run <strong>12–14 PSI</strong>. Soft terrain = lower pressure. Hard terrain = slightly higher.",tip:"Tip: Low pressure causes slow, unpredictable steering. High pressure reduces grip. Always use a gauge."},
+  {icon:"👀",cat:"Riding Skills",q:"Where should your eyes be when riding?",a:"Always <strong>3–5 seconds ahead</strong> of your current position. Your body follows your eyes — look where you WANT to go, not at what you want to avoid.",tip:"Tip: New riders stare at the ground. Train yourself to look up and scan the full track ahead."},
+  {icon:"⛽",cat:"Bike Basics",q:"What does it mean when your 2-stroke four-strokes?",a:"<strong>Four-stroking</strong> means the engine is running too rich (too much fuel) at a throttle position. It sounds like a soft chugging instead of a crisp, sharp sound.",tip:"Tip: A jetting or carburetor adjustment fixes this. Ask a more experienced rider or mechanic."},
+  {icon:"🤲",cat:"Bike Basics",q:"What is engine braking and how does it help you?",a:"<strong>Engine braking</strong> happens when you close the throttle — the engine's compression slows the bike. Use it going into corners to slow down without fully grabbing the brakes.",tip:"Tip: Combine light rear brake with engine braking for smooth, controlled corner entries."},
+  {icon:"🔂",cat:"Riding Skills",q:"What does 'looking through the corner' mean?",a:"It means turning your head and eyes toward the <strong>exit of the corner</strong> as early as possible, not staring at the corner's entry. Your body will follow your vision.",tip:"Tip: The earlier you look to the exit, the earlier you can accelerate out. Vision = speed."},
+  {icon:"⚠️",cat:"Safety",q:"What do you do if your throttle sticks open?",a:"Pull the <strong>clutch lever immediately</strong> to disconnect drive, then hit the kill switch. Do not panic-brake with a stuck throttle — grab the clutch first.",tip:"Tip: Practice this in a safe area so the muscle memory is there if it ever happens for real."},
+  {icon:"🛞",cat:"Maintenance",q:"Why is chain tension important and what happens if it's too loose?",a:"A loose chain can <strong>derail off the sprocket</strong>, causing you to lose all drive — or worse, it can snap and lock the rear wheel instantly. Check tension before every ride.",tip:"Tip: Chain should have about 1.5 inches of play at its tightest point with you on the bike."},
+  {icon:"💨",cat:"Track",q:"What is a 'whoop section' and how should a beginner approach it?",a:"Whoops are a series of small bumps/mounds. Beginners should <strong>slow down, stay seated, and absorb</strong> each one with their knees bent — never tense up.",tip:"Tip: As you improve, you'll learn to skim whoops at speed. For now, slow and smooth beats fast and crashing."},
+  {icon:"🌡️",cat:"Maintenance",q:"Why do you need to warm up your bike before riding hard?",a:"<strong>Cold engines</strong> have thick oil, tighter clearances, and poor fuel atomization. Warming up for 2–3 minutes lets oil circulate and components expand to proper operating temps.",tip:"Tip: Don't blip the throttle hard while warming up. Let it idle — your engine will last much longer."},
+  {icon:"🏔️",cat:"Body Position",q:"How should you position your body when going downhill?",a:"Shift your weight <strong>back and low</strong> on the seat, arms slightly bent, stand on the pegs, and cover both brakes. Lean back to prevent going over the bars.",tip:"Tip: Keep the front brake feathered, not grabbed hard — front wheel lockup on a downhill is dangerous."},
+  {icon:"🤸",cat:"Body Position",q:"How do you use your legs on the bike as a beginner?",a:"Your legs are your <strong>primary shock absorbers</strong>. Keep knees bent and gripping the bike's sides. Let your legs flex through bumps rather than letting the bike bounce your whole body.",tip:"Tip: Stiff legs = a rough, slow ride. Bend your knees and let the bike move under you."},
+  {icon:"📏",cat:"Track",q:"What is the 'safe following distance' when riding behind another rider?",a:"At least <strong>3–5 bike lengths</strong>, more at speed. Roost (flying dirt and rocks) can hit you, and you need reaction time if the rider ahead crashes or suddenly slows.",tip:"Tip: In group rides, give extra space downhill and in corners. Never tailgate on a motocross track."},
+  {icon:"🔴",cat:"Safety",q:"When should you hit the kill switch?",a:"Any time the bike needs to stop immediately — if you crash, if the throttle sticks, if someone is in your path, or if you're losing control. It's the <strong>instant-off button</strong>.",tip:"Tip: Know exactly where your kill switch is before every ride. Practice reaching it without looking."}
+],
+intermediate: [
+  {icon:"🎯",cat:"Lines",q:"Difference between the inside and outside line in a corner?",a:"The <strong>inside line</strong> is the shortest path but has less traction and ruts. The <strong>outside line</strong> uses the berm for grip and often allows higher corner speed. Choose based on conditions.",tip:"Tip: In dry hard-pack the inside can be fastest. In mud, always seek the berm."},
+  {icon:"🔄",cat:"Jumping",q:"What is 'pre-loading' a jump and why does it matter?",a:"<strong>Pre-loading</strong> means compressing the suspension just before the jump lip by pushing down through your feet. This launches you up and helps control your body angle in the air.",tip:"Tip: Timing is everything. Compress too early and you bounce awkwardly. Practice on small jumps first."},
+  {icon:"📐",cat:"Jumping",q:"How do you correct a nose-high (looping out) situation in the air?",a:"Apply a <strong>small burst of rear brake</strong> to bring the nose down. The spinning rear wheel acts as a gyroscope — braking it pitches the nose forward.",tip:"Tip: Nose-low? Blip the throttle to bring it back up. The opposite inputs work for opposite problems."},
+  {icon:"🌊",cat:"Track",q:"What is a rhythm section and what is the goal?",a:"A series of closely spaced jumps and rollers. The goal is to find the <strong>fastest combination</strong> of doubles, triples, or singles that links smoothly without breaking flow.",tip:"Tip: Watch fast riders on your track. Their rhythm line is usually 1–2 combos better than beginners run."},
+  {icon:"⚡",cat:"Throttle",q:"What is throttle control and why is it critical in corners?",a:"Smoothly <strong>managing engine power</strong> through a turn. Slightly off throttle at entry, neutral through the apex, then smoothly accelerating on exit.",tip:"Tip: Snapping the throttle mid-corner breaks traction. Smooth is fast — always."},
+  {icon:"🚦",cat:"Racing",q:"What is the holeshot and how do you get it?",a:"The <strong>holeshot</strong> is reaching the first corner in first place. Get it with: good gate selection, explosive launch on the gate drop, and carrying max speed into the first turn.",tip:"Tip: Gate pick order matters. Study where the first corner favors entry and select accordingly."},
+  {icon:"🏋️",cat:"Fitness",q:"Why is grip strength important and how do you train it?",a:"Grip strength prevents <strong>arm pump</strong> — the burning forearm fatigue that locks you up mid-race. Train with dead hangs, farmer carries, and forearm-specific exercises.",tip:"Tip: Arm pump is also a technique issue. Relax your grip on straights. Death-gripping the bars wastes energy."},
+  {icon:"🛞",cat:"Maintenance",q:"How do you know when to replace your air filter?",a:"Check it <strong>after every ride</strong>. If it's visibly dirty, oily, torn, or clogged — clean or replace it. A dirty filter starves the engine of air and kills power.",tip:"Tip: In dusty or sandy conditions, check your filter even more often — sometimes mid-ride."},
+  {icon:"💧",cat:"Fitness",q:"How much should you drink before and during a race day?",a:"Drink <strong>16–20 oz of water 2 hours before</strong> racing. Sip consistently all day. In heat, add electrolytes. Dehydration kills focus and reaction time.",tip:"Tip: If you're thirsty, you're already behind. Hydrate the night before race day, not just race morning."},
+  {icon:"🧠",cat:"Strategy",q:"What does 'managing a gap' mean during a race?",a:"Controlling your pace to <strong>maintain a comfortable lead</strong> without over-riding. Once you have a gap, ride at 95% to reduce crash risk while not letting the gap shrink.",tip:"Tip: Check your gap at the same landmark each lap. Growing = fine. Shrinking = push again."},
+  {icon:"🌪️",cat:"Cornering",q:"What is a rut and how do you ride one correctly?",a:"A <strong>rut</strong> is a groove worn into the corner by repeated traffic. Ride deep into the rut, let it guide your front wheel, and drive hard out. Don't fight it — trust it.",tip:"Tip: Ruts can be faster than a berm if they're clean. Commit fully — half-committed rut riding causes crashes."},
+  {icon:"📊",cat:"Racing",q:"How do you properly gate-pick before a race?",a:"Walk the track first, identify the first corner's apex, then pick the gate that gives the <strong>straightest line</strong> to that apex. Also check gate surface — avoid mud or gravel.",tip:"Tip: Don't always copy the fast rider's gate. They might have track knowledge or a different bike setup."},
+  {icon:"🔁",cat:"Jumping",q:"What is a 'double' and how do you approach it for the first time?",a:"A double is <strong>jumping over two consecutive jumps</strong> in one leap. First walk it and visualize. Approach at the correct speed, stay centered, and look at the landing, not the gap.",tip:"Tip: Speed is commitment. Too slow and you case (hit the lip of the second jump). Too fast and you overshoot."},
+  {icon:"🏃",cat:"Fitness",q:"What types of off-bike cardio best prepare you for motocross?",a:"<strong>Cycling, trail running, swimming, and HIIT</strong> training all translate well to MX. They build cardiovascular endurance needed to maintain intensity through a 30-minute moto.",tip:"Tip: Cycling is best because it's non-impact, builds leg strength, and mimics the seated MX position."},
+  {icon:"🌡️",cat:"Maintenance",q:"What is coolant and why do you check it on a 4-stroke MX bike?",a:"<strong>Coolant</strong> (antifreeze + water) circulates through the engine to prevent overheating. Check the reservoir level before every ride — low coolant = seized engine.",tip:"Tip: Never open the radiator cap when the engine is hot. Coolant is pressurized and will burn you."},
+  {icon:"📍",cat:"Strategy",q:"What is a 'block pass' and when is it effective?",a:"A block pass is entering a corner in front of your opponent to force them wide. Most effective when <strong>you brake later</strong> than them and own the inside before the apex.",tip:"Tip: Block passes work best on opponents who take wide, sweeping approaches. Set it up a straight ahead."},
+  {icon:"🎛️",cat:"Setup",q:"What does tire knob pattern affect in motocross?",a:"Knob pattern determines <strong>traction on different surfaces</strong>. Widely-spaced tall knobs grip soft/muddy terrain. Shorter, closer knobs are faster on hard-pack.",tip:"Tip: Using a soft-terrain tire on hard-pack wears knobs fast and gives poor control. Always match tire to conditions."},
+  {icon:"🧘",cat:"Mental",q:"How do you handle crashing and getting back on the bike mentally?",a:"Crashes are part of racing. <strong>Assess injury quickly, get up, restart.</strong> Don't replay the crash in your head — focus on the next corner. Everyone crashes, champions get back up faster.",tip:"Tip: Take 3 deep breaths after a crash before remounting. A 3-second reset beats a 3-lap panic spiral."},
+  {icon:"⏱️",cat:"Racing",q:"What is a moto format and how does it work?",a:"In motocross, a <strong>moto</strong> is a timed race, typically 20–30 minutes plus 2 laps. You often run 2–3 motos per class. Your overall finish is based on combined moto results.",tip:"Tip: A good finish in moto 1 reduces pressure in moto 2. Consistency across motos beats one great moto + one crash."},
+  {icon:"🔦",cat:"Track",q:"What is 'track walk' and why is it important?",a:"Walking the track <strong>before riding</strong> to study corners, jumps, rhythm sections, and hazards. You identify the fastest lines and plan your approach before committing at speed.",tip:"Tip: Walk it more than once. First lap = safety scan. Second lap = line hunting. Third lap = race strategy."}
+],
+expert: [
+  {icon:"🏆",cat:"Race Craft",q:"What is 'blocking' a pass and when is it legal?",a:"Positioning your bike to make passing harder. Legal when done <strong>before corner entry</strong>. Moving under braking or mid-corner to block is dangerous and usually penalized.",tip:"Tip: The best pass defense is simply a fast corner exit. Riders can't pass what they can't catch."},
+  {icon:"🎛️",cat:"Setup",q:"What is sag and how does it affect handling?",a:"<strong>Sag</strong> is how much the rear suspension compresses under rider weight. Too much = lazy steering; too little = harsh and skittish. Race sag target: <strong>100–105mm</strong> with rider seated.",tip:"Tip: Check sag anytime you gain or lose significant weight, or change gear. It's the #1 suspension setting."},
+  {icon:"🔬",cat:"Setup",q:"What does increasing compression damping do to suspension?",a:"<strong>Compression damping</strong> controls how fast suspension compresses on impacts. More = stiffer, better control on big hits. Less = more plush, better small-bump compliance.",tip:"Tip: Hard-pack needs more compression; soft loamy tracks need less. Always tune for the day's conditions."},
+  {icon:"💨",cat:"Jumping",q:"How do you execute a scrub on a jump?",a:"Approach at an angle, <strong>lean and whip the bike sideways</strong> across the jump face, staying low instead of launching high. Minimizes airtime and maintains speed.",tip:"Tip: Perfected by James Stewart. Drill it on small jumps first — requires precise throttle, lean, and timing."},
+  {icon:"🧩",cat:"Race Craft",q:"How do you set up and execute a pass in a corner?",a:"Out-brake your opponent — brake <strong>later and deeper</strong>, take the inside line, and ensure you're alongside before the apex. The leader must give racing room once you're there.",tip:"Tip: A clean inside pass forces the leader wide on exit, letting you drive away on acceleration."},
+  {icon:"📊",cat:"Training",q:"What is a structured training block and why use one?",a:"A periodized program with <strong>build phases, peak phases, and recovery weeks</strong>. Prevents overtraining, builds fitness progressively, and peaks you for key race events.",tip:"Tip: Most elite MX athletes run 4-week blocks: 3 hard, 1 easy. The recovery week is when adaptation happens."},
+  {icon:"🏔️",cat:"Fitness",q:"What is VO2 max and how does it relate to MX performance?",a:"<strong>VO2 max</strong> is the maximum rate of oxygen your body can consume during exercise. Higher VO2 max = faster recovery between intense efforts — critical for a 30-minute moto.",tip:"Tip: HIIT cycling and trail running are the fastest ways to build VO2 max for MX athletes."},
+  {icon:"🎯",cat:"Mental",q:"What is visualization and how do you use it before a race?",a:"<strong>Visualization</strong> is mentally rehearsing your race lap by lap. Sit quietly, close your eyes, and ride a perfect lap — every corner, every jump, every line — in your mind.",tip:"Tip: Ricky Carmichael and Ryan Dungey both credited visualization as a core mental tool. Make it a pre-race ritual."},
+  {icon:"🔩",cat:"Maintenance",q:"How do you correctly check and adjust chain tension?",a:"With the rider on the bike, there should be about <strong>1.5 inches of free play</strong> at the tightest point of the chain. Too tight = accelerated wear. Too loose = derailment risk.",tip:"Tip: Always check at the tightest spot as you rotate the wheel — chains are rarely perfectly uniform around the full rotation."},
+  {icon:"📡",cat:"Strategy",q:"How do you ride differently in wet or muddy conditions?",a:"Lower tire pressure for grip, ride <strong>smoother lines with less aggressive body input</strong>, avoid water-packed berms, manage throttle gently to prevent wheelspin, and look further ahead.",tip:"Tip: Mud races are won by staying on the bike. A crash in mud costs 30 seconds. Smooth always beats aggressive."},
+  {icon:"🔭",cat:"Setup",q:"What is rebound damping and how do you tune it?",a:"<strong>Rebound damping</strong> controls how fast the suspension extends after compression. Too fast = pogo-stick, bouncy feel. Too slow = packed-down, no grip between bumps.",tip:"Tip: Start with the manufacturer base setting. Tune for your weight and riding style in small increments."},
+  {icon:"🧬",cat:"Fitness",q:"How does lactate threshold training apply to motocross?",a:"Lactate threshold is the intensity at which lactic acid accumulates faster than it clears. Training at/near this threshold <strong>raises your sustainable race pace</strong> before you go anaerobic.",tip:"Tip: Tempo runs and threshold cycling intervals (zone 3–4) are the most efficient ways to build this."},
+  {icon:"🏎️",cat:"Race Craft",q:"How do you manage tire wear over a 30-minute moto?",a:"Rear tire degrades fastest in ruts and berms. <strong>Adjust your lines mid-race</strong> as grip drops — move to fresher dirt, vary your corner entry, and avoid aggressive wheelspin on exits.",tip:"Tip: A fresh tire setup for each moto matters. Budget-conscious teams often carry used tires from practice only."},
+  {icon:"🌐",cat:"Racing",q:"What is the points structure at Loretta Lynn's and how do you qualify?",a:"Loretta's uses Area Qualifiers → Regional Qualifiers → Nationals. Points per finish (25-1-1st-to-last) across 3 motos determine <strong>who advances and earns a national number</strong>.",tip:"Tip: Consistency beats one great moto. A 1-3-2 beats a 1-1-DNF every time in points standings."},
+  {icon:"📈",cat:"Training",q:"What is periodization and how does an off-season plan work for MX?",a:"<strong>Periodization</strong> divides the year into base, build, peak, and recovery phases. Off-season focuses on aerobic base and strength. Pre-season = sport-specific intensity. Race season = performance.",tip:"Tip: Most top amateur programs start structured off-season training by October for a March race season."},
+  {icon:"🤝",cat:"Setup",q:"What is linkage and how does it affect suspension feel?",a:"The <strong>linkage</strong> connects the rear shock to the swingarm, giving a progressive rate — softer early in stroke, stiffer toward bottom. Worn linkage bearings make the rear vague and unpredictable.",tip:"Tip: Repack linkage bearings every 15–20 hours of riding. It's a cheap service that transforms rear-end feel."},
+  {icon:"🧠",cat:"Mental",q:"What is race anxiety and how do elite riders manage it?",a:"Race anxiety is normal nervous energy. Elite riders <strong>reframe anxiety as readiness</strong>, use controlled breathing, build pre-race routines, and focus on process (their ride) not outcome (placement).",tip:"Tip: A 4-7-8 breathing pattern (inhale 4s, hold 7s, exhale 8s) activates the parasympathetic nervous system quickly."},
+  {icon:"🌿",cat:"Fitness",q:"What role does nutrition timing play on race day?",a:"Eat a <strong>carb-rich meal 3 hours before</strong> racing. A small carb snack 30–45 minutes before for top-up. Avoid fats and fiber close to motos — they slow digestion and cause GI issues.",tip:"Tip: Practice your race-day nutrition plan at local races before you rely on it at a major national."},
+  {icon:"⚖️",cat:"Setup",q:"How does fork height in the triple clamps affect handling?",a:"Raising the forks (sliding them up through the clamps) <strong>quickens steering</strong> but reduces front-end stability. Lowering them slows steering but adds stability at high speed.",tip:"Tip: Tight, technical tracks = raise forks slightly. Fast, open tracks = lower them. Small changes (2–3mm) make big differences."},
+  {icon:"🔑",cat:"Race Craft",q:"What is 'controlled aggression' in motocross racing?",a:"The ability to <strong>ride at maximum commitment without exceeding your limits</strong> — staying at 98–100% without tipping into mistakes. It's the hallmark of elite racers vs. fast practice riders.",tip:"Tip: Most riders crash when they try to go to 110% to chase. Controlled aggression means trusting your training at 100%."}
+]
+};
+
+// ============================================================
+// BADGES DEFINITION
+// ============================================================
+const BADGE_DEFS = [
+  {id:'nov_first',icon:'🟢',name:'First Lap',desc:'Complete novice level',cond:s=>s.novice.completions>=1},
+  {id:'nov_perfect',icon:'💎',name:'Clean Sheet',desc:'100% on novice',cond:s=>s.novice.bestPct>=100},
+  {id:'int_first',icon:'🔵',name:'Step Up',desc:'Complete intermediate level',cond:s=>s.intermediate.completions>=1},
+  {id:'int_perfect',icon:'⚡',name:'Moto Machine',desc:'100% on intermediate',cond:s=>s.intermediate.bestPct>=100},
+  {id:'exp_first',icon:'🔴',name:'Pro Circuit',desc:'Complete expert level',cond:s=>s.expert.completions>=1},
+  {id:'exp_perfect',icon:'🏆',name:'GOAT Status',desc:'100% on expert',cond:s=>s.expert.bestPct>=100},
+  {id:'streak5',icon:'🔥',name:'On Fire',desc:'5-card streak',cond:s=>s.bestStreak>=5},
+  {id:'streak10',icon:'🌋',name:'Lava Lap',desc:'10-card streak',cond:s=>s.bestStreak>=10},
+  {id:'all_complete',icon:'🎖️',name:'Full Send',desc:'Complete all 3 levels',cond:s=>s.novice.completions>=1&&s.intermediate.completions>=1&&s.expert.completions>=1},
+  {id:'xp500',icon:'💰',name:'XP Millionaire',desc:'Earn 500 total XP',cond:s=>s.totalXp>=500},
+];
+
+// ============================================================
+// STATE
+// ============================================================
+let state = loadState();
+let currentLevel = 'novice';
+let deck = [];
+let idx = 0;
+let flipped = false;
+let sessionCorrect = 0;
+let sessionXp = 0;
+let streak = 0;
+let bestStreak = 0;
+let newBadge = null;
+
+function defaultState() {
+  return {
+    totalXp:0, bestStreak:0,
+    badges:[],
+    novice:{completions:0,bestPct:0},
+    intermediate:{completions:0,bestPct:0},
+    expert:{completions:0,bestPct:0}
+  };
+}
+function loadState() {
+  try { return {...defaultState(),...JSON.parse(localStorage.getItem('mxflash')||'{}')}; }
+  catch(e){ return defaultState(); }
+}
+function saveState() { try { localStorage.setItem('mxflash',JSON.stringify(state)); } catch(e){} }
+
+// ============================================================
+// XP / RANKS
+// ============================================================
+const RANKS = [
+  {name:'MX Student',min:0},
+  {name:'Track Rat',min:100},
+  {name:'Technique Builder',min:250},
+  {name:'Holeshot Hunter',min:500},
+  {name:'Forge Graduate',min:1000},
+  {name:'Brayden Approved',min:2000},
+];
+function getRank(xp) { return RANKS.filter(r=>xp>=r.min).pop(); }
+function getNextRank(xp) { return RANKS.find(r=>r.min>xp)||null; }
+
+// ============================================================
+// HOME SCREEN
+// ============================================================
+function renderHome() {
+  const rank = getRank(state.totalXp);
+  const next = getNextRank(state.totalXp);
+  document.getElementById('riderRank').textContent = rank.name;
+  const pct = next ? Math.min(100,((state.totalXp-rank.min)/(next.min-rank.min))*100) : 100;
+  document.getElementById('homeXpBar').style.width = pct+'%';
+  document.getElementById('homeXpLabel').textContent = next
+    ? `${state.totalXp} XP — ${next.min - state.totalXp} XP to ${next.name}`
+    : `${state.totalXp} XP — MAX RANK!`;
+
+  // Stars
+  ['novice','intermediate','expert'].forEach(l=>{
+    const bp = (state[l]||{bestPct:0}).bestPct||0;
+    const stars = bp>=100?'⭐⭐⭐':bp>=70?'⭐⭐':bp>=40?'⭐':'☆☆☆';
+    const id = l==='intermediate'?'int':l==='expert'?'exp':'nov';
+    document.getElementById(id+'Stars').textContent = stars;
+  });
+
+  // Badges
+  const row = document.getElementById('homeBadgesRow');
+  row.innerHTML = '';
+  BADGE_DEFS.forEach(b=>{
+    const earned = state.badges.includes(b.id);
+    const chip = document.createElement('div');
+    chip.className = 'badge-chip '+(earned?'earned':'locked');
+    chip.textContent = (earned?b.icon:'🔒')+' '+b.name;
+    chip.title = b.desc;
+    row.appendChild(chip);
+  });
+}
+
+// ============================================================
+// GAME FLOW
+// ============================================================
+function startLevel(level) {
+  currentLevel = level;
+  deck = shuffle([...CARDS[level]]);
+  idx = 0; flipped = false;
+  sessionCorrect = 0; sessionXp = 0;
+  streak = 0; bestStreak = 0;
+  newBadge = null;
+
+  document.getElementById('levelBadge').textContent = level.toUpperCase();
+  document.getElementById('levelBadge').className = 'play-level-badge '+level;
+  document.getElementById('frontBar').className = 'card-top-bar '+level;
+  document.getElementById('backBar').className = 'card-top-bar '+level;
+
+  showScreen('playScreen');
+  renderCard();
+  updatePlayXp();
+}
+
+function renderCard() {
+  const c = deck[idx];
+  flipped = false;
+  document.getElementById('cardInner').classList.remove('flipped');
+  document.getElementById('voteRow').style.display = 'none';
+  document.getElementById('cardEmoji').textContent = c.icon;
+  document.getElementById('cardQ').textContent = c.q;
+  document.getElementById('catLabel').textContent = c.cat;
+  const dot = document.getElementById('catDot');
+  dot.style.background = currentLevel==='novice'?'var(--novice)':currentLevel==='intermediate'?'var(--inter)':'var(--expert)';
+  document.getElementById('cardAns').innerHTML = c.a;
+  document.getElementById('cardTipEl').textContent = c.tip;
+
+  const total = deck.length;
+  const pct = ((idx+1)/total)*100;
+  document.getElementById('playProg').style.width = pct+'%';
+  document.getElementById('playProgLabel').textContent = `${idx+1}/${total}`;
+}
+
+function flipCard() {
+  if (!flipped) {
+    flipped = true;
+    document.getElementById('cardInner').classList.add('flipped');
+    document.getElementById('voteRow').style.display = 'flex';
+  }
+}
+
+function vote(correct) {
+  const xpEarned = correct ? (5 + streak*2) : 0;
+  if (correct) {
+    streak++;
+    if (streak > bestStreak) bestStreak = streak;
+    sessionCorrect++;
+    sessionXp += xpEarned;
+    state.totalXp += xpEarned;
+    if (xpEarned > 0) showXpPopup('+'+xpEarned+' XP');
+  } else {
+    streak = 0;
+  }
+  document.getElementById('streakVal').textContent = streak;
+  updatePlayXp();
+  saveState();
+  nextCard();
+}
+
+function nextCard() {
+  if (idx >= deck.length - 1) {
+    finishSession();
+    return;
+  }
+  idx++;
+  renderCard();
+}
+
+function prevCard() {
+  if (idx > 0) { idx--; renderCard(); }
+}
+
+function shuffleDeck() {
+  deck = shuffle([...CARDS[currentLevel]]);
+  idx = 0; renderCard();
+}
+
+function updatePlayXp() {
+  document.getElementById('playXpVal').textContent = state.totalXp + ' XP';
+}
+
+function showXpPopup(text) {
+  const el = document.createElement('div');
+  el.className = 'xp-popup'; el.textContent = text;
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(), 950);
+}
+
+// ============================================================
+// SESSION END
+// ============================================================
+function finishSession() {
+  const total = deck.length;
+  const pct = Math.round((sessionCorrect/total)*100);
+
+  // Update level stats
+  const ls = state[currentLevel];
+  ls.completions = (ls.completions||0)+1;
+  ls.bestPct = Math.max(ls.bestPct||0, pct);
+  if (bestStreak > (state.bestStreak||0)) state.bestStreak = bestStreak;
+
+  // Check badges
+  newBadge = null;
+  BADGE_DEFS.forEach(b=>{
+    if (!state.badges.includes(b.id) && b.cond(state)) {
+      state.badges.push(b.id);
+      newBadge = b;
+    }
+  });
+  saveState();
+
+  // Trophy/headline
+  const trophy = pct>=100?'🏆':pct>=80?'🥇':pct>=60?'🥈':'🥉';
+  const headline = pct>=100?'PERFECT!':pct>=80?'RIPPED IT!':pct>=60?'SOLID RIDE':'KEEP TRAINING';
+  document.getElementById('resultTrophy').textContent = trophy;
+  document.getElementById('resultHeadline').textContent = headline;
+  document.getElementById('resultSub').textContent = `Forge MX · ${currentLevel.charAt(0).toUpperCase()+currentLevel.slice(1)} — ${pct}% Correct`;
+  document.getElementById('rsCorrect').textContent = sessionCorrect+'/'+total;
+  document.getElementById('rsStreak').textContent = bestStreak;
+  document.getElementById('rsXp').textContent = '+'+sessionXp;
+
+  const bBox = document.getElementById('badgeEarnedBox');
+  if (newBadge) {
+    bBox.style.display = 'flex';
+    document.getElementById('beIcon').textContent = newBadge.icon;
+    document.getElementById('beName').textContent = newBadge.name;
+  } else {
+    bBox.style.display = 'none';
+  }
+
+  showScreen('resultScreen');
+}
+
+function playAgain() { startLevel(currentLevel); }
+function goHome() { renderHome(); showScreen('homeScreen'); }
+function resetProgress() {
+  if (confirm('Reset all XP, badges, and progress?')) {
+    state = defaultState(); saveState(); renderHome();
+  }
+}
+
+// ============================================================
+// SCREEN MANAGER
+// ============================================================
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+// ============================================================
+// SWIPE SUPPORT
+// ============================================================
+let touchStartX = 0, touchStartY = 0;
+document.getElementById('cardInner').addEventListener('touchstart', e=>{
+  touchStartX = e.touches[0].clientX;
+  touchStartY = e.touches[0].clientY;
+},{passive:true});
+document.getElementById('cardInner').addEventListener('touchend', e=>{
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  const dy = e.changedTouches[0].clientY - touchStartY;
+  if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
+    if (!flipped) { flipCard(); return; }
+    if (dx < 0) nextCard(); else prevCard();
+  } else if (!flipped) {
+    flipCard();
+  }
+},{passive:true});
+
+// Keyboard
+document.addEventListener('keydown', e=>{
+  if (document.getElementById('playScreen').classList.contains('active')) {
+    if (e.key==='ArrowRight') flipped?nextCard():flipCard();
+    else if (e.key==='ArrowLeft') prevCard();
+    else if (e.key===' ') { e.preventDefault(); flipCard(); }
+    else if (e.key==='g'||e.key==='G') { if(flipped) vote(true); }
+    else if (e.key==='m'||e.key==='M') { if(flipped) vote(false); }
+  }
+});
+
+// ============================================================
+// PWA / INSTALL
+// ============================================================
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js').catch(()=>{});
+}
+
+// iOS install prompt (show after 3 seconds on first visit)
+const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+if (isIOS && !isStandalone && !localStorage.getItem('installDismissed')) {
+  setTimeout(()=>{
+    document.getElementById('installBanner').classList.add('show');
+    document.querySelector('.install-close').addEventListener('click',()=>{
+      localStorage.setItem('installDismissed','1');
+    });
+  }, 3000);
+}
+
+// ============================================================
+// UTILS
+// ============================
