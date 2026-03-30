@@ -11,7 +11,7 @@
 <style>
 :root {
   --dirt: #1e1208; --mud: #2e1c0d; --panel: #251508; --orange: #ff6b00;
-  --orangeHi: #ff8c33; --yellow: #ffd000; --white: #f2ead8; --dim: #7a6e60;
+  --orangeHi: #ff8c33; --white: #f2ead8; --dim: #7a6e60;
   --novice: #00b894; --inter: #0984e3; --expert: #e84040; --xpColor: #ffd000;
 }
 * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
@@ -24,46 +24,84 @@ body {
 .screen { display:none; flex-direction:column; height:100%; overflow:hidden; }
 .screen.active { display:flex; }
 
-/* === All your original CSS goes here (shortened for message size) === */
-.card-inner { width:100%; transform-style:preserve-3d; transition:transform 0.5s cubic-bezier(0.4,0.2,0.2,1); cursor:pointer; }
+/* Basic card styles */
+.card-stage { flex:1; display:flex; align-items:center; justify-content:center; padding:20px; perspective:1200px; }
+.card-inner {
+  width:100%; max-width:420px; transform-style:preserve-3d; transition:transform 0.6s cubic-bezier(0.4,0.2,0.2,1); cursor:pointer;
+}
 .card-inner.flipped { transform:rotateY(180deg); }
-.card-face { width:100%; backface-visibility:hidden; border-radius:10px; overflow:hidden; }
+.card-face {
+  width:100%; backface-visibility:hidden; border-radius:12px; overflow:hidden; box-shadow:0 10px 30px rgba(0,0,0,0.6);
+}
 .card-back-face { position:absolute; top:0; left:0; transform:rotateY(180deg); }
-
-/* Add the rest of your CSS here if you want — for now this is enough to test */
 </style>
 </head>
 <body>
 
+<!-- HOME SCREEN -->
 <div class="screen active" id="homeScreen">
-  <h1 style="color:#ff6b00; text-align:center; padding:40px 20px;">Forge MX Training</h1>
-  <p style="text-align:center; padding:0 20px;">Loading full app...</p>
+  <div style="padding:40px 20px; text-align:center;">
+    <h1 style="font-family:'Bebas Neue',sans-serif; font-size:2.8rem; color:#ff6b00;">FORGE MX</h1>
+    <p style="margin:20px 0; color:#ccc;">Master Your Ride</p>
+    <button onclick="startLevel('novice')" style="background:#ff6b00; color:white; border:none; padding:15px 30px; font-size:1.2rem; border-radius:8px; margin:10px;">Start Novice Level</button>
+  </div>
 </div>
 
+<!-- PLAY SCREEN -->
 <div class="screen" id="playScreen">
-  <div style="padding:20px; text-align:center;">
-    <h2 id="levelBadge">NOVICE</h2>
-    <div id="cardInner" style="background:#2e1c0d; padding:30px; margin:20px; border-radius:12px; min-height:280px; cursor:pointer;">
-      <div id="cardQ" style="font-size:24px; margin-bottom:20px;">Tap to start</div>
+  <div style="padding:15px; background:#251508; text-align:center; font-size:1.1rem;" id="levelHeader">NOVICE LEVEL</div>
+  
+  <div class="card-stage">
+    <div class="card-inner" id="cardInner">
+      <!-- Front -->
+      <div class="card-face" style="background:var(--mud); padding:30px; min-height:320px;">
+        <div id="cardEmoji" style="font-size:60px; margin-bottom:20px;"></div>
+        <div id="cardQ" style="font-size:1.4rem; line-height:1.3; font-family:'Bebas Neue',sans-serif;"></div>
+        <div style="margin-top:30px; font-size:0.9rem; color:#aaa;">Tap to reveal answer</div>
+      </div>
+      <!-- Back -->
+      <div class="card-face card-back-face" style="background:#111; padding:25px; min-height:320px;">
+        <div style="color:#ff6b00; font-weight:bold; margin-bottom:10px;">ANSWER</div>
+        <div id="cardAns" style="line-height:1.6; font-size:1.05rem;"></div>
+      </div>
     </div>
-    <div id="voteRow" style="display:none; gap:10px; padding:10px;">
-      <button type="button" id="missedBtn" style="flex:1; padding:15px; background:#555; color:white; border:none; border-radius:8px;">❌ Missed It</button>
-      <button type="button" id="gotBtn" style="flex:1; padding:15px; background:#ff6b00; color:white; border:none; border-radius:8px;">✅ Got It!</button>
-    </div>
+  </div>
+
+  <div id="voteRow" style="display:none; padding:15px; gap:12px; flex-direction:row;">
+    <button type="button" id="missedBtn" style="flex:1; padding:16px; background:#555; color:white; border:none; border-radius:8px; font-size:1.1rem;">❌ Missed It</button>
+    <button type="button" id="gotBtn" style="flex:1; padding:16px; background:#00b894; color:white; border:none; border-radius:8px; font-size:1.1rem;">✅ Got It!</button>
+  </div>
+
+  <div style="padding:15px; text-align:center;">
+    <button type="button" onclick="goHome()" style="background:#333; color:#ccc; border:none; padding:10px 20px; border-radius:6px;">← Back to Garage</button>
   </div>
 </div>
 
 <script>
-// ==================== FULL WORKING VERSION ====================
-
+// ==================== CARD DATA - All 20 Novice Cards ====================
 const CARDS = {
   novice: [
-    {icon:"🏍️", q:"What is the clutch and when do you use it?", a:"The clutch is the lever on the left handlebar. Use it to start, shift gears, and stop without stalling."},
-    // ... I kept only a few for testing. You can add all 20 later
-    {icon:"🧢", q:"What are the 5 essential pieces of safety gear?", a:"Helmet, goggles, chest protector, gloves, and boots."}
-  ],
-  intermediate: [],
-  expert: []
+    {icon:"🏍️", q:"What is the clutch and when do you use it?", a:"The clutch is the lever on the left handlebar. It disconnects the engine from the rear wheel. Use it to start moving, shift gears, and stop without stalling."},
+    {icon:"⚙️", q:"How do you shift gears on a dirt bike?", a:"Pull the clutch lever, click the gear shifter with your left foot, then release the clutch smoothly."},
+    {icon:"🧢", q:"What are the 5 essential pieces of safety gear?", a:"Helmet (DOT rated), goggles, chest protector, gloves, and boots."},
+    {icon:"🦵", q:"What is the 'attack position' in motocross?", a:"Stand on the pegs, knees bent and gripping the bike, elbows up, eyes looking ahead."},
+    {icon:"🌀", q:"Which foot goes forward in a corner?", a:"Your outside foot goes forward on the peg."},
+    {icon:"🏁", q:"What is a 'berm' and how do you ride it?", a:"A berm is a banked corner. Ride into it and let it redirect your bike, then accelerate out."},
+    {icon:"🛑", q:"What are the two brakes and where are they located?", a:"Front brake = right handlebar lever. Rear brake = right foot pedal."},
+    {icon:"🔧", q:"How often should you check tire pressure?", a:"Before every ride. Motocross tires usually run 12–14 PSI."},
+    {icon:"👀", q:"Where should your eyes be when riding?", a:"Always 3–5 seconds ahead of your current position."},
+    {icon:"⛽", q:"What does it mean when your 2-stroke four-strokes?", a:"The engine is running too rich (too much fuel). It sounds chuggy instead of crisp."},
+    {icon:"🤲", q:"What is engine braking?", a:"When you close the throttle, the engine compression slows the bike down."},
+    {icon:"🔂", q:"What does 'looking through the corner' mean?", a:"Turn your head and eyes toward the exit of the corner as early as possible."},
+    {icon:"⚠️", q:"What do you do if your throttle sticks open?", a:"Pull the clutch immediately, then hit the kill switch."},
+    {icon:"🛞", q:"Why is chain tension important?", a:"A loose chain can derail or snap and lock the rear wheel."},
+    {icon:"💨", q:"How should a beginner approach a whoop section?", a:"Slow down, stay seated, and absorb the bumps with your knees."},
+    {icon:"🌡️", q:"Why warm up your bike before riding hard?", a:"Cold oil and tight parts can cause damage. Warm it for 2–3 minutes."},
+    {icon:"🏔️", q:"How do you position your body going downhill?", a:"Shift weight back and low, arms slightly bent, cover both brakes."},
+    {icon:"🤸", q:"How do you use your legs on the bike?", a:"Your legs are the main shock absorbers. Keep knees bent and gripping."},
+    {icon:"📏", q:"What is the safe following distance?", a:"At least 3–5 bike lengths, more at speed."},
+    {icon:"🔴", q:"When should you hit the kill switch?", a:"Any time you need to stop the bike instantly — crash, stuck throttle, losing control."}
+  ]
 };
 
 let currentLevel = 'novice';
@@ -73,7 +111,7 @@ let flipped = false;
 
 function startLevel(level) {
   currentLevel = level;
-  deck = [...CARDS.novice]; // change to your full data later
+  deck = [...CARDS.novice];
   idx = 0;
   flipped = false;
   document.getElementById('homeScreen').classList.remove('active');
@@ -82,47 +120,55 @@ function startLevel(level) {
 }
 
 function renderCard() {
-  if (deck.length === 0) return;
+  if (idx >= deck.length) {
+    alert("🎉 Novice Level Complete! Great work.");
+    goHome();
+    return;
+  }
   const c = deck[idx];
   flipped = false;
-  document.getElementById('cardQ').textContent = c.q;
+  document.getElementById('cardInner').classList.remove('flipped');
   document.getElementById('voteRow').style.display = 'none';
+  document.getElementById('cardEmoji').textContent = c.icon;
+  document.getElementById('cardQ').innerHTML = c.q;
+  document.getElementById('cardAns').innerHTML = c.a;
 }
 
 function flipCard() {
   if (!flipped) {
     flipped = true;
+    document.getElementById('cardInner').classList.add('flipped');
     document.getElementById('voteRow').style.display = 'flex';
   }
 }
 
 function vote(correct) {
-  alert(correct ? "Great job! +XP" : "Keep practicing!");
+  // Simple feedback for now
+  if (correct) {
+    alert("✅ Nice! You got it.");
+  } else {
+    alert("❌ Keep practicing — you'll get it next time.");
+  }
   nextCard();
 }
 
 function nextCard() {
   idx++;
-  if (idx >= deck.length) {
-    alert("Level Complete! 🎉");
-    document.getElementById('playScreen').classList.remove('active');
-    document.getElementById('homeScreen').classList.add('active');
-    return;
-  }
   renderCard();
 }
 
-// Event listeners
+function goHome() {
+  document.getElementById('playScreen').classList.remove('active');
+  document.getElementById('homeScreen').classList.add('active');
+}
+
+// Event Listeners
 document.getElementById('cardInner').addEventListener('click', flipCard);
 document.getElementById('gotBtn').addEventListener('click', () => vote(true));
 document.getElementById('missedBtn').addEventListener('click', () => vote(false));
 
 // Start the app
-setTimeout(() => {
-  startLevel('novice');
-}, 500);
-
-console.log("✅ Forge MX app loaded successfully");
+console.log("✅ Forge MX loaded successfully");
 </script>
 </body>
 </html>
